@@ -85,12 +85,5 @@ int readmap(void){
 
 int main(void)
 {
-	int a = 1;
 	readmap();	
-	
-	for (int i =0; i < 30; i++){
-		for (int j = 0; j < 30; j++)
-			printf("%c", map[a][i][j]);
-		printf("\n");
-	}
 }
