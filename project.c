@@ -8,12 +8,6 @@
 
 /********************
   message or todo
-  .: 1
-  #: 2
-  $: 3
-  O: 4
-  @: 5
-  O+$ = $ : 6
 *********************/
 
 #include<stdio.h>
@@ -38,23 +32,23 @@ int readmap(void){
 	while (fscanf(mapf, "%c", &a) != EOF)
 	{	
 		if(a == ' '){
-			map[b][i][j] = 0;
+			map[b][i][j] = ' ';
 			j++;
 		}
 		else if(a == '#'){
-			map[b][i][j] = 2;
+			map[b][i][j] = '#';
 			j++;
 		}
 		else if(a == '$'){
-			map[b][i][j] = 3;
+			map[b][i][j] = '$';
 			j++;
 		}
 		else if(a =='O'){
-			map[b][i][j] = 4;
+			map[b][i][j] = 'O';
 			j++;
 		}
 		else if(a =='@'){
-			map[b][i][j] = 5;
+			map[b][i][j] = '@';
 			j++;
 		}
 		else if(a =='\n'){
@@ -72,6 +66,8 @@ int readmap(void){
 		}*/
 		else if (a == 97){
 			b++;
+			i =0;
+			j =0;
 		}
 		else{}		
 	}
@@ -89,12 +85,12 @@ int readmap(void){
 
 int main(void)
 {
-	int a = 0;
+	int a = 1;
 	readmap();	
 	
 	for (int i =0; i < 30; i++){
 		for (int j = 0; j < 30; j++)
-			printf("%d", map[a][i][j]);
+			printf("%c", map[a][i][j]);
 		printf("\n");
 	}
 }
