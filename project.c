@@ -1,8 +1,7 @@
-/********************
-*
+/*********************
 * date:
-* group:
-* student ID: 20170259,
+* group: handsome
+* student ID: 20170259,20170319,20170293,
 * 
 *
 ********************/
@@ -15,20 +14,21 @@
   O: 4
   @: 5
   O+$ = $ : 6
+*********************/
 
-  ********************/
 #include<stdio.h>
 
-//seung mo
+//Seung-mo
 
-//jahyne
+//Jae-hyun
 
-//cheolsoo
+//Cheol-soon
 
-//jawoo
+//Jae-woo
 
 //main
+
 int main(void)
 {
-	
+  
 }
