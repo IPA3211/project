@@ -19,20 +19,26 @@
 #include<stdio.h>
 
 //common
-FILE  *map
 
 int map[5][30][30];
 //Seung-mo
 int readmap(void){
 	
-	int a,b = 0, i = 0, j = 0;
+	FILE  *mapf;
+	char a;	
+	int b = -1, i = 0, j = 0;
 
-	map = fopen("map", "r");
+	mapf = fopen("map.txt", "r");
 
-	while (fscanf(map, "%c", &a) != 'e')
+	for(int x = 0; x <5 ; x++)
+		for(int y = 0; y< 30; y++)
+			for(int z = 0; z < 30; z++)
+				map[x][y][z] = 0;
+
+	while (fscanf(mapf, "%c", &a) != EOF)
 	{	
 		if(a == ' '){
-			map[b][i][j] = 1;
+			map[b][i][j] = 0;
 			j++;
 		}
 		else if(a == '#'){
@@ -53,14 +59,25 @@ int readmap(void){
 		}
 		else if(a =='\n'){
 			i++;
+			j = 0;
 		}
-		else if(a == 'm'){
+	/*	else if(a == '1'){
+			b = 0;
+		}
+		else if(a == '2'){
+			b = 1;
+		}
+		else if(a == '3'){
+			b = 2;
+		}*/
+		else if (a == 97){
 			b++;
 		}
 		else{}		
 	}
 
-
+	fclose(mapf);
+	return 0;
 }
 //Jae-hyun
 
@@ -72,14 +89,12 @@ int readmap(void){
 
 int main(void)
 {
-	int a;
-	scanf("%d" &a);
+	int a = 0;
+	readmap();	
 	
-	readmap();
-
 	for (int i =0; i < 30; i++){
 		for (int j = 0; j < 30; j++)
-			printf("%d" map[a][i][j]);
-		printf("\n")
+			printf("%d", map[a][i][j]);
+		printf("\n");
 	}
 }
