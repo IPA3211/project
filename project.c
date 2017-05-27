@@ -8,13 +8,52 @@
 
 /********************
   message or todo
+  
+  1. read map: clear(on main)
+  2. error: 
+  3. input name:
+  4. func clear:
+  5. ranking:
+  6. save ranking:
+  7. h,j,k,l move:
+  8. undo:
+  9. new:
+  10. exit:
+  11. replay:
+  12. file load:
+  13. save:
+  14. help:
+  15. top:
+  16. each map top:
 *********************/
 
 #include<stdio.h>
 
-//common
-
+//common var
 int map[5][30][30];
+
+//common func
+int getch(void){
+    int ch;
+
+    struct termios buf;
+    struct termios save;
+
+    tcgetattr(0, &save);
+    buf = save;
+
+    buf.c_lflag&=~(ICANON|ECHO);
+    buf.c_cc[VMIN] = 1;
+    buf.c_cc[VTIME] = 0;
+
+	tcsetattr(0, TCSAFLUSH, &buf);
+
+    ch = getchar();
+    tcsetattr(0, TCSAFLUSH, &save);
+
+    return ch;
+}
+
 //Seung-mo
 int readmap(void){
 	
