@@ -153,8 +153,6 @@ int ctrl_key(int stage)
     }
    }
   char = ch; ch = getch();
-  while(1)
-  {
     if((ch == 'l')&&(p_map[b][a+1]) == ' ')//right
     {
       p_map[b][a] = p_map[b][a+1];
@@ -198,7 +196,6 @@ int ctrl_key(int stage)
 				p_map[b][a-2] = '$';
 			}
 		}
- }
 }
 
 //Cheol-soon
@@ -221,5 +218,8 @@ int main(void)
 {
 	readmap();
 	playmap(stage);
+	while(1){
 	showgame();
+	ctrl_key();
+	}
 }
