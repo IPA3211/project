@@ -28,10 +28,10 @@
 *********************/
 
 /* FOR WINDOWS */
-//#include <termio.h>
+#include <termio.h>
 
 /* FOR MAC OS X */
-#include <termios.h>
+//#include <termios.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -214,6 +214,24 @@ int inputname(void)
 }
 
 //Jae-woo
+int error(void){
+    int box=0, place=0;
+    for(int b=0; b<5; b++){
+        for(int i=0; i<30; i++)
+            for(int j=0; j<30; j++)
+            {
+                if(map[b][i][j]=='$')
+                    box++;
+                else if(map[b][i][j]=='o')
+                    place++;
+                else{}
+            }
+        if(box!=place){
+            printf("맵에 오류가 있습니다.\n");
+            exit();
+        }
+    }
+}
 
 //main
 
