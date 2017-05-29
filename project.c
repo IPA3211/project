@@ -6,10 +6,7 @@
 *
 ********************/
 
-/********************
-  message or todo
-
-  1. read map: clear(on main)
+/********************. read map: clear(on main)
   2. error:
   3. input name: clear
   4. func clear:
@@ -37,7 +34,10 @@
 
 //common var
 
-int map[5][30][30];
+
+  message or todo
+
+  1int map[5][30][30];
 int p_map[30][30];
 
 int stage = 0;
