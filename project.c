@@ -10,7 +10,7 @@
   message or todo
 
   1. read map: clear(on main)
-  2. error:
+  2. error: clear(on main)
   3. input name: clear
   4. func clear:
   5. ranking:
@@ -28,10 +28,10 @@
 *********************/
 
 /* FOR WINDOWS */
-#include <termio.h>
+//#include <termio.h>
 
 /* FOR MAC OS X */
-//#include <termios.h>
+#include <termios.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -228,7 +228,7 @@ int error(void){
             }
         if(box!=place){
             printf("맵에 오류가 있습니다.\n");
-            exit();
+            exit(1);
         }
     }
 }
@@ -239,6 +239,7 @@ int main(void)
 {
 	readmap();
 	playmap(stage);
+	error();
 	while(1){
 	showgame();
 	ctrl_key();
