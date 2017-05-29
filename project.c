@@ -57,7 +57,7 @@ int getch(void){
 	buf.c_lflag&=~(ICANON|ECHO);
 	buf.c_cc[VMIN] = 1;
 	buf.c_cc[VTIME] = 0;
-	
+
 	tcsetattr(0, TCSAFLUSH, &buf);
 
 	ch = getchar();
@@ -127,6 +127,65 @@ int playmap(int a)
 	return 0;
 }
 //Jae-hyun
+int ctrl_key(int stage)
+{
+  for(i=0;i<30;i++)
+  {
+    for(j=0;j<30;j++)
+    {
+      if (p_map[i][j] == '@')
+        b = i, a = j;
+      break;
+    }
+   }
+  char = ch; ch = getch();
+  while(1)
+  {
+    if((ch == 'l')&&(p_map[b][a+1]) == ' ')//right
+    {
+      p_map[b][a] = p_map[b][a+1];
+      p_map[b][a+1] = '@';
+      a += 1;
+    }
+    else if((ch == 'l')&&(p_map[b][a+1]) == '#')
+    {
+
+    }
+    else if((ch == 'l')&&(p_map[b][a+1]) == '$')
+    {
+      if(p_map[b][a+2] == '#')
+      {}
+      else if(p_map[b][a+2] == ' ')
+      {
+        p_map[b][a] = p_map[b][a+2];
+        p_map[b][a+1] = '@';
+        p_map[b][a+2] = '$';
+				a += 1;
+      }
+    }
+		if((ch == 'h')&&(p_map[b][a-1]) == ' ')//left
+		{
+			p_map[b][a] = p_map[b][a-1];
+			p_map[b][a-1] = '@';
+			a -= 1;
+		}
+		else if((ch == 'h')&&(p_map[b][a-1]) == '#')
+		{
+
+		}
+		else if((ch == 'h')&&(p_map[b][a-1]) == '$')
+		{
+			if(p_map[b][a-2] == '#')
+			{}
+			else if(p_map[b][a-2] == ' ')
+			{
+				p_map[b][a] = p_map[b][a-2];
+				p_map[b][a-1] = '@';
+				p_map[b][a-2] = '$';
+			}
+		}
+ }
+}
 
 //Cheol-soon
 int inputname(void)
