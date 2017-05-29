@@ -34,11 +34,13 @@
 #include <termios.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 
 //common var
 
 int map[5][30][30];
 int p_map[30][30];
+int mapsize[5];
 
 int stage = 0;
 
@@ -107,6 +109,7 @@ int readmap(void){
 			j = 0;
 		}
 		else if (a == 97){
+			mapsize[b] = i;
 			b++;
 			i =-1;
 			j =0;
@@ -124,6 +127,17 @@ int playmap(int a)
 		for(int j = 0; j < 30; j++)
 			p_map[i][j] = map[a][i][j];
 
+	return 0;
+}
+
+int showgame()
+{
+	system("clear");
+	for(int i =0; i < mapsize[stage]-1; i++){
+		for(int j = 0; j < 30; j++)
+			printf("%c", p_map[i][j]);
+		printf("\n");
+	}
 	return 0;
 }
 //Jae-hyun
@@ -174,4 +188,5 @@ int main(void)
 {
 	readmap();
 	playmap(stage);
+	showgame();
 }
