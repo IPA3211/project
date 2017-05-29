@@ -42,7 +42,7 @@ int map[5][30][30];
 int p_map[30][30];
 int mapsize[5];
 
-int stage = 1;
+int stage = 0;
 
 char name[10];
 
@@ -140,66 +140,6 @@ int showgame()
 	}
 	return 0;
 }
-//Jae-hyun
-int ctrl_key(void)
-{
-	int a, b;
-  for(int i=0;i<30;i++)
-  {
-    for(int j=0;j<30;j++)
-    {
-      if (p_map[i][j] == '@'){
-        b = i, a = j;
-      break;
-	  }
-    }
-   }
-  char ch;
-  ch = getch();
-    if((ch == 'l')&&(p_map[b][a+1]) == ' ')//right
-    {
-      p_map[b][a] = p_map[b][a+1];
-      p_map[b][a+1] = '@';
-      a += 1;
-    }
-    else if((ch == 'l')&&(p_map[b][a+1]) == '#')
-    {
-
-    }
-    else if((ch == 'l')&&(p_map[b][a+1]) == '$')
-    {
-      if(p_map[b][a+2] == '#')
-      {}
-      else if(p_map[b][a+2] == ' ')
-      {
-        p_map[b][a] = p_map[b][a+2];
-        p_map[b][a+1] = '@';
-        p_map[b][a+2] = '$';
-				a += 1;
-      }
-    }
-		if((ch == 'h')&&(p_map[b][a-1]) == ' ')//left
-		{
-			p_map[b][a] = p_map[b][a-1];
-			p_map[b][a-1] = '@';
-			a -= 1;
-		}
-		else if((ch == 'h')&&(p_map[b][a-1]) == '#')
-		{
-
-		}
-		else if((ch == 'h')&&(p_map[b][a-1]) == '$')
-		{
-			if(p_map[b][a-2] == '#')
-			{}
-			else if(p_map[b][a-2] == ' ')
-			{
-				p_map[b][a] = p_map[b][a-2];
-				p_map[b][a-1] = '@';
-				p_map[b][a-2] = '$';
-			}
-		}
-}
 
 //Cheol-soon
 int inputname(void)
@@ -229,13 +169,13 @@ int displayhelp(void){
 	printf("-t(top) : 게임 순위 보기.(t만 입력하면 전체 순위, t다음 숫자가 오면 해당 맵의 순위)\n");
 	printf("----------------나가기 'q'-----------------\n");
 
-	quit == getchar();
+	quit = getchar();
 	if (quit == 113) //'q'의 아스키 코드값은 113이다. 113이 입력되면 나가기.
 		return 0;
 }
 
 /* new(n) */
-int newgame(void)
+int newgame(void);
 
 
 
@@ -248,12 +188,12 @@ int error(void){
             {
                 if(map[b][i][j]=='$')
                     box++;
-                else if(map[b][i][j]=='o')
+                else if(map[b][i][j]=='O')
                     place++;
                 else{}
             }
         if(box!=place){
-            printf("맵에 오류가 있습니다.\n");
+            printf("%d맵에 오류가 있습니다.\n", b);
             exit(1);
         }
     }
