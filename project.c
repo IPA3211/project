@@ -57,7 +57,7 @@ int getch(void){
 	buf.c_lflag&=~(ICANON|ECHO);
 	buf.c_cc[VMIN] = 1;
 	buf.c_cc[VTIME] = 0;
-	
+
 	tcsetattr(0, TCSAFLUSH, &buf);
 
 	ch = getchar();
@@ -139,6 +139,28 @@ int inputname(void)
 
 	return 0;
 }
+
+/* display help(d) */
+int displayhelp(void)
+	char quit;
+	//만약 d키가 눌렸을 때 아래의 내용들이 보여짐.//
+	printf("-------------------조작법------------------\n");
+	printf("-h(왼쪽), j(아래), k(위), l(오른쪽) : 창고지기 조정\n");
+	printf("-u(undo) : 이전에 있던 위치로 돌아가기 (최대 5번 할 수 있음.)\n");
+	printf("-r(replay) : 현재 맵을 처음부터 다시 시작(게임시간은 계속 유지.)\n");
+	printf("-n(new) : 첫 번째 맵부터 다시 시작(현재까지의 시간 기록 삭제.)\n");
+	printf("-e(exit) : 게임 종료.\n");
+	printf("-s(save) : 현재상태 파일에 저장\n");
+	printf("-f(file load) : 저장한 파일 불러와서 이어서 게임시작.\n");
+	printf("-d(display help) : 명령어 보여줌.\n");
+	printf("-t(top) : 게임 순위 보기.(t만 입력하면 전체 순위, t다음 숫자가 오면 해당 맵의 순위)\n");
+	printf("----------------나가기 'q'-----------------\n");
+
+	quit == getchar();
+	if (quit == 113)
+		return 0;
+}
+
 
 //Jae-woo
 
