@@ -80,7 +80,7 @@ int readmap(void){
 	for(int x = 0; x <5 ; x++)
 		for(int y = 0; y< 30; y++)
 			for(int z = 0; z < 30; z++)
-				map[x][y][z] = 0;
+				map[x][y][z] = ' ';
 
 	while (fscanf(mapf, "%c", &a) != EOF)
 	{
@@ -178,7 +178,7 @@ int ctrl_key(void)
 				a += 1;
       }
     }
-		if((ch == 'h')&&(p_map[b][a-1]) == ' ')//left
+		else if((ch == 'h')&&(p_map[b][a-1]) == ' ')//left
 		{
 			p_map[b][a] = p_map[b][a-1];
 			p_map[b][a-1] = '@';
@@ -197,6 +197,51 @@ int ctrl_key(void)
 				p_map[b][a] = p_map[b][a-2];
 				p_map[b][a-1] = '@';
 				p_map[b][a-2] = '$';
+				a -= 1;
+			}
+		}
+		else if((ch == 'k')&&(p_map[b+1][a]) == ' ')//up
+		{
+			p_map[b][a] = p_map[b+1][a];
+			p_map[b+1][a] = '@';
+			b += 1;
+		}
+		else if((ch == 'k')&&(p_map[b+1][a]) == '#')
+		{
+
+		}
+		else if((ch == 'k')&&(p_map[b+1][a]) == '$')
+		{
+			if(p_map[b+2][a] == '#')
+			{}
+			else if(p_map[b+2][a] == ' ')
+			{
+				p_map[b][a] = p_map[b+2][a];
+				p_map[b+1][a] = '@';
+				p_map[b+2][a] = '$';
+				b += 1;
+			}
+		}
+		else if((ch == 'j')&&(p_map[b-1][a]) == ' ')//down
+		{
+			p_map[b][a] = p_map[b-1][a];
+			p_map[b-1][a] = '@';
+			b -= 1;
+		}
+		else if((ch == 'j')&&(p_map[b-1][a]) == '#')
+		{
+
+		}
+		else if((ch == 'j')&&(p_map[b-1][a]) == '$')
+		{
+			if(p_map[b-2][a] == '#')
+			{}
+			else if(p_map[b-2][a] == ' ')
+			{
+				p_map[b][a] = p_map[b-2][a];
+				p_map[b-1][a] = '@';
+				p_map[b-2][a] = '$';
+				b -= 1;
 			}
 		}
 }
