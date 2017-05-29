@@ -27,32 +27,43 @@
   16. each map top:
 *********************/
 
-#include<stdio.h>
+/* FOR WINDOWS */
+//#include <termio.h>
+
+/* FOR MAC OS X */
+#include <termios.h>
+
+#include <stdio.h>
 
 //common var
+
 int map[5][30][30];
+int p_map[30][30];
+
+int stage = 0;
+
 char name[10];
 
 //common func
 int getch(void){
-    int ch;
+	int ch;
 
-    struct termios buf;
-    struct termios save;
+	struct termios buf;
+	struct termios save;
 
-    tcgetattr(0, &save);
-    buf = save;
+	tcgetattr(0, &save);
+	buf = save;
 
-    buf.c_lflag&=~(ICANON|ECHO);
-    buf.c_cc[VMIN] = 1;
-    buf.c_cc[VTIME] = 0;
-
+	buf.c_lflag&=~(ICANON|ECHO);
+	buf.c_cc[VMIN] = 1;
+	buf.c_cc[VTIME] = 0;
+	
 	tcsetattr(0, TCSAFLUSH, &buf);
 
-    ch = getchar();
-    tcsetattr(0, TCSAFLUSH, &save);
+	ch = getchar();
+	tcsetattr(0, TCSAFLUSH, &save);
 
-    return ch;
+	return ch;
 }
 
 //Seung-mo
@@ -95,18 +106,9 @@ int readmap(void){
 			i++;
 			j = 0;
 		}
-	/*	else if(a == '1'){
-			b = 0;
-		}
-		else if(a == '2'){
-			b = 1;
-		}
-		else if(a == '3'){
-			b = 2;
-		}*/
 		else if (a == 97){
 			b++;
-			i =0;
+			i =-1;
 			j =0;
 		}
 		else{}
@@ -115,18 +117,27 @@ int readmap(void){
 	fclose(mapf);
 	return 0;
 }
+
+int playmap(int a)
+{
+	for(int i =0; i < 30; i++)
+		for(int j = 0; j < 30; j++)
+			p_map[i][j] = map[a][i][j];
+
+	return 0;
+}
 //Jae-hyun
 
 //Cheol-soon
 int inputname(void)
 {
- int nm;
+	int nm;
 
-  printf("사용자 명을 입력하시오(최대10자): ");
-  for(nm=0;nm<10;nm++)
-  scanf("%c", &name[nm]); //입력받은 값을 name배열값에 지정.
+	printf("사용자 명을 입력하시오(최대10자): ");
+	for(nm=0;nm<10;nm++)
+	   	scanf("%c", &name[nm]); //입력받은 값을 name배열값에 지정.
 
-  return 0;
+	return 0;
 }
 
 //Jae-woo
@@ -135,6 +146,6 @@ int inputname(void)
 
 int main(void)
 {
-
 	readmap();
+	playmap(stage);
 }
