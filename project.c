@@ -42,7 +42,7 @@ int map[5][30][30];
 int p_map[30][30];
 int mapsize[5];
 
-int stage = 0;
+int stage = 1;
 
 char name[10];
 
@@ -141,18 +141,21 @@ int showgame()
 	return 0;
 }
 //Jae-hyun
-int ctrl_key(int stage)
+int ctrl_key(void)
 {
-  for(i=0;i<30;i++)
+	int a, b;
+  for(int i=0;i<30;i++)
   {
-    for(j=0;j<30;j++)
+    for(int j=0;j<30;j++)
     {
-      if (p_map[i][j] == '@')
+      if (p_map[i][j] == '@'){
         b = i, a = j;
       break;
+	  }
     }
    }
-  char = ch; ch = getch();
+  char ch;
+  ch = getch();
     if((ch == 'l')&&(p_map[b][a+1]) == ' ')//right
     {
       p_map[b][a] = p_map[b][a+1];
