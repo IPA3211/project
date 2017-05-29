@@ -10,7 +10,7 @@
   message or todo
 
   1. read map: clear(on main)
-  2. error:
+  2. error: clear(on main)
   3. input name: clear
   4. func clear:
   5. ranking:
@@ -34,13 +34,15 @@
 #include <termios.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 
 //common var
 
 int map[5][30][30];
 int p_map[30][30];
+int mapsize[5];
 
-int stage = 0;
+int stage = 1;
 
 char name[10];
 
@@ -107,6 +109,7 @@ int readmap(void){
 			j = 0;
 		}
 		else if (a == 97){
+			mapsize[b] = i;
 			b++;
 			i =-1;
 			j =0;
@@ -126,7 +129,77 @@ int playmap(int a)
 
 	return 0;
 }
+
+int showgame()
+{
+	system("clear");
+	for(int i =0; i < mapsize[stage]-1; i++){
+		for(int j = 0; j < 30; j++)
+			printf("%c", p_map[i][j]);
+		printf("\n");
+	}
+	return 0;
+}
 //Jae-hyun
+int ctrl_key(void)
+{
+	int a, b;
+  for(int i=0;i<30;i++)
+  {
+    for(int j=0;j<30;j++)
+    {
+      if (p_map[i][j] == '@'){
+        b = i, a = j;
+      break;
+	  }
+    }
+   }
+  char ch;
+  ch = getch();
+    if((ch == 'l')&&(p_map[b][a+1]) == ' ')//right
+    {
+      p_map[b][a] = p_map[b][a+1];
+      p_map[b][a+1] = '@';
+      a += 1;
+    }
+    else if((ch == 'l')&&(p_map[b][a+1]) == '#')
+    {
+
+    }
+    else if((ch == 'l')&&(p_map[b][a+1]) == '$')
+    {
+      if(p_map[b][a+2] == '#')
+      {}
+      else if(p_map[b][a+2] == ' ')
+      {
+        p_map[b][a] = p_map[b][a+2];
+        p_map[b][a+1] = '@';
+        p_map[b][a+2] = '$';
+				a += 1;
+      }
+    }
+		if((ch == 'h')&&(p_map[b][a-1]) == ' ')//left
+		{
+			p_map[b][a] = p_map[b][a-1];
+			p_map[b][a-1] = '@';
+			a -= 1;
+		}
+		else if((ch == 'h')&&(p_map[b][a-1]) == '#')
+		{
+
+		}
+		else if((ch == 'h')&&(p_map[b][a-1]) == '$')
+		{
+			if(p_map[b][a-2] == '#')
+			{}
+			else if(p_map[b][a-2] == ' ')
+			{
+				p_map[b][a] = p_map[b][a-2];
+				p_map[b][a-1] = '@';
+				p_map[b][a-2] = '$';
+			}
+		}
+}
 
 //Cheol-soon
 int inputname(void)
@@ -140,7 +213,52 @@ int inputname(void)
 	return 0;
 }
 
+/* display help(d) */
+int displayhelp(void){
+	char quit; //quit
+	//만약 d키가 눌렸을 때 아래의 내용들이 보여짐.//
+	printf("-------------------조작법------------------\n");
+	printf("-h(왼쪽), j(아래), k(위), l(오른쪽) : 창고지기 조정\n");
+	printf("-u(undo) : 이전에 있던 위치로 돌아가기 (최대 5번 할 수 있음.)\n");
+	printf("-r(replay) : 현재 맵을 처음부터 다시 시작(게임시간은 계속 유지.)\n");
+	printf("-n(new) : 첫 번째 맵부터 다시 시작(현재까지의 시간 기록 삭제.)\n");
+	printf("-e(exit) : 게임 종료.\n");
+	printf("-s(save) : 현재상태 파일에 저장\n");
+	printf("-f(file load) : 저장한 파일 불러와서 이어서 게임시작.\n");
+	printf("-d(display help) : 명령어 보여줌.\n");
+	printf("-t(top) : 게임 순위 보기.(t만 입력하면 전체 순위, t다음 숫자가 오면 해당 맵의 순위)\n");
+	printf("----------------나가기 'q'-----------------\n");
+
+	quit == getchar();
+	if (quit == 113) //'q'의 아스키 코드값은 113이다. 113이 입력되면 나가기.
+		return 0;
+}
+
+/* new(n) */
+int newgame(void)
+
+
+
 //Jae-woo
+int error(void){
+    int box=0, place=0;
+    for(int b=0; b<5; b++){
+        for(int i=0; i<30; i++)
+            for(int j=0; j<30; j++)
+            {
+                if(map[b][i][j]=='$')
+                    box++;
+                else if(map[b][i][j]=='o')
+                    place++;
+                else{}
+            }
+        if(box!=place){
+            printf("맵에 오류가 있습니다.\n");
+            exit(1);
+        }
+    }
+}
+//Jae-hyun
 int ctrl_key(void)
 {
 	int a, b;
@@ -251,4 +369,9 @@ int main(void)
 {
 	readmap();
 	playmap(stage);
+	error();
+	while(1){
+	showgame();
+	ctrl_key();
+	}
 }
