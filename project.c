@@ -57,7 +57,7 @@ int getch(void){
 	buf.c_lflag&=~(ICANON|ECHO);
 	buf.c_cc[VMIN] = 1;
 	buf.c_cc[VTIME] = 0;
-	
+
 	tcsetattr(0, TCSAFLUSH, &buf);
 
 	ch = getchar();
@@ -141,7 +141,110 @@ int inputname(void)
 }
 
 //Jae-woo
+int ctrl_key(void)
+{
+	int a, b;
+  for(int i=0;i<30;i++)
+  {
+    for(int j=0;j<30;j++)
+    {
+      if (p_map[i][j] == '@'){
+        b = i, a = j;
+      break;
+	  }
+    }
+   }
+  char ch;
+  ch = getch();
+    if((ch == 'l')&&(p_map[b][a+1]) == ' ')//right
+    {
+      p_map[b][a] = p_map[b][a+1];
+      p_map[b][a+1] = '@';
+      a += 1;
+    }
+    else if((ch == 'l')&&(p_map[b][a+1]) == '#')
+    {
 
+    }
+    else if((ch == 'l')&&(p_map[b][a+1]) == '$')
+    {
+      if(p_map[b][a+2] == '#')
+      {}
+      else if(p_map[b][a+2] == ' ')
+      {
+        p_map[b][a] = p_map[b][a+2];
+        p_map[b][a+1] = '@';
+        p_map[b][a+2] = '$';
+				a += 1;
+      }
+    }
+		else if((ch == 'h')&&(p_map[b][a-1]) == ' ')//left
+		{
+			p_map[b][a] = p_map[b][a-1];
+			p_map[b][a-1] = '@';
+			a -= 1;
+		}
+		else if((ch == 'h')&&(p_map[b][a-1]) == '#')
+		{
+
+		}
+		else if((ch == 'h')&&(p_map[b][a-1]) == '$')
+		{
+			if(p_map[b][a-2] == '#')
+			{}
+			else if(p_map[b][a-2] == ' ')
+			{
+				p_map[b][a] = p_map[b][a-2];
+				p_map[b][a-1] = '@';
+				p_map[b][a-2] = '$';
+				a -= 1;
+			}
+		}
+		else if((ch == 'k')&&(p_map[b+1][a]) == ' ')//up
+		{
+			p_map[b][a] = p_map[b+1][a];
+			p_map[b+1][a] = '@';
+			b += 1;
+		}
+		else if((ch == 'k')&&(p_map[b+1][a]) == '#')
+		{
+
+		}
+		else if((ch == 'k')&&(p_map[b+1][a]) == '$')
+		{
+			if(p_map[b+2][a] == '#')
+			{}
+			else if(p_map[b+2][a] == ' ')
+			{
+				p_map[b][a] = p_map[b+2][a];
+				p_map[b+1][a] = '@';
+				p_map[b+2][a] = '$';
+				b += 1;
+			}
+		}
+		else if((ch == 'j')&&(p_map[b-1][a]) == ' ')//down
+		{
+			p_map[b][a] = p_map[b-1][a];
+			p_map[b-1][a] = '@';
+			b -= 1;
+		}
+		else if((ch == 'j')&&(p_map[b-1][a]) == '#')
+		{
+
+		}
+		else if((ch == 'j')&&(p_map[b-1][a]) == '$')
+		{
+			if(p_map[b-2][a] == '#')
+			{}
+			else if(p_map[b-2][a] == ' ')
+			{
+				p_map[b][a] = p_map[b-2][a];
+				p_map[b-1][a] = '@';
+				p_map[b-2][a] = '$';
+				b -= 1;
+			}
+		}
+}
 //main
 
 int main(void)
