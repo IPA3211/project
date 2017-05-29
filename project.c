@@ -141,8 +141,8 @@ int inputname(void)
 }
 
 /* display help(d) */
-int displayhelp(void)
-	char quit;
+int displayhelp(void){
+	char quit; //quit
 	//만약 d키가 눌렸을 때 아래의 내용들이 보여짐.//
 	printf("-------------------조작법------------------\n");
 	printf("-h(왼쪽), j(아래), k(위), l(오른쪽) : 창고지기 조정\n");
@@ -157,9 +157,13 @@ int displayhelp(void)
 	printf("----------------나가기 'q'-----------------\n");
 
 	quit == getchar();
-	if (quit == 113)
+	if (quit == 113) //'q'의 아스키 코드값은 113이다. 113이 입력되면 나가기.
 		return 0;
 }
+
+/* new(n) */
+int newgame(void)
+
 
 
 //Jae-woo
