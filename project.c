@@ -6,7 +6,10 @@
 *
 ********************/
 
-/********************. read map: clear(on main)
+/********************
+  message or todo
+
+  1. read map: clear(on main)
   2. error:
   3. input name: clear
   4. func clear:
@@ -33,9 +36,6 @@
 #include <stdio.h>
 
 //common var
-
-
-  message or todo
 
 int map[5][30][30];
 int p_map[30][30];
