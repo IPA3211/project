@@ -9,22 +9,26 @@
 /********************
   message or todo
 
+  O + $ = %
+  @ + O = *
+
   1. read map: clear(on main)
   2. error: clear(on main)
   3. input name: clear
-  4. func clear:
+  4. game clear:
   5. ranking:
   6. save ranking:
-  7. h,j,k,l move:
+  7. h,j,k,l move: clear(on main)
   8. undo:
   9. new:
   10. exit:
   11. replay:
   12. file load:
   13. save:
-  14. help:
+  14. help: clear
   15. top:
   16. each map top:
+  17. time:
 *********************/
 
 /* FOR WINDOWS */
@@ -36,6 +40,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/* FOR ERROR FIX */
+int ctrl_key(char ch);
 //common var
 
 int map[5][30][30];
@@ -45,7 +51,6 @@ int mapsize[5];
 int stage = 0;
 
 char name[10];
-
 //common func
 int getch(void){
 	int ch;
@@ -132,13 +137,45 @@ int playmap(int a)
 
 int showgame()
 {
-	system("clear");
 	for(int i =0; i < mapsize[stage]-1; i++){
-		for(int j = 0; j < 30; j++)
-			printf("%c", p_map[i][j]);
+		for(int j = 0; j < 30; j++){
+			if(p_map == '%')
+				printf("$");
+			else if (p_map == '*')
+				printf("@");
+			else
+				printf("%c", p_map[i][j]);
+		}
 		printf("\n");
 	}
 	return 0;
+}
+int command(char x){
+	switch (x)
+	{
+		case 'd':
+			displayhelp();
+
+	}
+}
+
+int get_key(void)
+{
+	static char a;
+	static char a_sav;
+
+	printf("(command) %c", a);
+
+	a = getch();
+
+	if((a == 'h')||(a == 'j')||(a == 'k')||(a == 'l')){
+		ctrl_key(a);
+		a = ' ';
+	}
+	else if(a == '\n')
+		command(a_sav);
+	else;
+	a_sav = a;
 }
 
 //Cheol-soon
@@ -155,8 +192,8 @@ int inputname(void)
 
 /* display help(d) */
 int displayhelp(void){
-	char quit; //quit
 	//만약 d키가 눌렸을 때 아래의 내용들이 보여짐.//
+	system("clear");
 	printf("-------------------조작법------------------\n");
 	printf("-h(왼쪽), j(아래), k(위), l(오른쪽) : 창고지기 조정\n");
 	printf("-u(undo) : 이전에 있던 위치로 돌아가기 (최대 5번 할 수 있음.)\n");
@@ -168,10 +205,9 @@ int displayhelp(void){
 	printf("-d(display help) : 명령어 보여줌.\n");
 	printf("-t(top) : 게임 순위 보기.(t만 입력하면 전체 순위, t다음 숫자가 오면 해당 맵의 순위)\n");
 	printf("----------------나가기 'q'-----------------\n");
-
-	quit = getchar();
-	if (quit == 113) //'q'의 아스키 코드값은 113이다. 113이 입력되면 나가기.
-		return 0;
+	if(getch() == 'q');
+	else
+		displayhelp();
 }
 
 /* new(n) */
@@ -199,22 +235,21 @@ int error(void){
     }
 }
 //Jae-hyun
-int ctrl_key(void)
+int ctrl_key(char ch)
 {
 	int a, b;
   for(int i=0;i<30;i++)
   {
     for(int j=0;j<30;j++)
     {
-      if (p_map[i][j] == '@'){
+      if ((p_map[i][j] == '@')||(p_map[i][j] == '*')){
         b = i, a = j;
       break;
 	  }
     }
    }
-  char ch;
-  ch = getch();
-    if((ch == 'l')&&(p_map[b][a+1]) == ' ')//right
+
+    if((ch == 'l')&&((p_map[b][a+1] == ' ')||p_map[b][a+1] == 'O'))//right
     {
       p_map[b][a] = p_map[b][a+1];
       p_map[b][a+1] = '@';
@@ -302,6 +337,7 @@ int ctrl_key(void)
 				b -= 1;
 			}
 		}
+		return 0;
 }
 //main
 
@@ -311,7 +347,8 @@ int main(void)
 	playmap(stage);
 	error();
 	while(1){
-	showgame();
-	ctrl_key();
+		showgame();
+		get_key();
+		system("clear");
 	}
 }
