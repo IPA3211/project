@@ -15,20 +15,20 @@
   1. read map: clear(on main)
   2. error: clear(on main)
   3. input name: clear
-  4. game clear:
-  5. ranking:
-  6. save ranking:
+  4. game clear: jae-woo
+  5. ranking: jae-hyun
+  6. save ranking: jae-woo
   7. h,j,k,l move: clear(on main)
-  8. undo:
-  9. new:
-  10. exit:
-  11. replay:
-  12. file load:
-  13. save:
+  8. undo: cheol-soon
+  9. new: cheol-soon
+  10. exit: jae-woo
+  11. replay: jae-hyun
+  12. file load: jae-woo
+  13. save: jae-woo
   14. help: clear
-  15. top:
-  16. each map top:
-  17. time:
+  15. top: cheol-soon
+  16. each map top: cheol-soon
+  17. time: jae-woo
 *********************/
 
 /* FOR WINDOWS */
