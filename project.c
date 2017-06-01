@@ -20,7 +20,7 @@
   6. save ranking: jae-woo
   7. h,j,k,l move: clear(on main)
   8. undo: cheol-soon
-  9. new: cheol-soon
+  9. new: clear(on main)
   10. exit: jae-woo
   11. replay: jae-hyun
   12. file load: jae-woo
