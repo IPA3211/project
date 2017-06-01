@@ -32,10 +32,10 @@
 *********************/
 
 /* FOR WINDOWS */
-//#include <termio.h>
+#include <termio.h>
 
 /* FOR MAC OS X */
-#include <termios.h>
+///#include <termios.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -51,6 +51,7 @@ int mapsize[5];
 int stage = 0;
 
 char name[10];
+char undo[6];
 //common func
 int getch(void){
 	int ch;
@@ -169,6 +170,12 @@ int get_key(void)
 	a = getch();
 
 	if((a == 'h')||(a == 'j')||(a == 'k')||(a == 'l')){
+		undo[4] = undo[3];
+		undo[3] = undo[2];
+		undo[2] = undo[1];
+		undo[1] = undo[0];
+		undo[0] = a;
+
 		ctrl_key(a);
 		a = ' ';
 	}
@@ -210,8 +217,26 @@ int displayhelp(void){
 		displayhelp();
 }
 
-/* new(n) */
-int newgame(void);
+/* undo(u) */
+int undo(void)
+{
+	if(getch() == 'u'){
+		if(undo[0] == 'h')
+			ctrl_key('l');
+		else if(undo[0] == 'j')
+			ctrl_key('k');
+		else if(undo[0] == 'k')
+			ctrl_key('j');
+		else if(undo[0] == 'l')
+			ctrl_key('h');
+		undo[0] = undo[1];
+		undo[1] = undo[2];
+		undo[2] = undo[3];
+		undo[3] = undo[4];
+		undo[4] = ' ';
+			//이후 화물의 움직임은 생각해본다. 화물의 움직임의 배열을 하나 만듦.
+	}
+}
 
 
 
