@@ -32,10 +32,10 @@
 *********************/
 
 /* FOR WINDOWS */
-#include <termio.h>
+//#include <termio.h>
 
 /* FOR MAC OS X */
-//#include <termios.h>
+#include <termios.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -52,7 +52,7 @@ int stage = 0;
 
 char name[10];
 clock_t start,end;
-double time,alltime,savetime;
+double m_time,alltime,savetime;
 //common func
 int getch(void){
 	int ch;
@@ -270,8 +270,8 @@ int fileload(void)
 { //f키를 눌렀을 때
 	FILE *sokoban;
 	sokoban=fopen("sokoban.txt","r");
-	for(i=0;i<30;i++)
-		for(j=0;j<30;j++)
+	for(int i=0;i<30;i++)
+		for(int j=0;j<30;j++)
 			fscanf(sokoban,"%c",&p_map[i][j]);
 	fscanf(sokoban,"%3f",&savetime);
 	fscanf(sokoban,"%d",&stage);
@@ -281,27 +281,27 @@ int fileload(void)
 int save(void)
 { //s키
 	end=clock();
-	savetime= (end-start)/1000
+	savetime= (end-start)/1000;
 	FILE *sokoban;
 	sokoban=fopen("sokoban.txt","w");
-	for(i=0; i<30;i++)
-		for(j=0; j<30; J++)
+	for(int i=0; i<30;i++)
+		for(int j=0; j<30; j++)
 		{
 			fprintf(sokoban,"%c",p_map[i][j]);
 		}
 	fprintf(sokoban,"%3f",savetime);
 	fprintf(sokoban,"%d",stage);
 	fclose(sokoban);
-	start=clock()
+	start=clock();
 }
-int timeprint(void){
+/*int timeprint(void){
 	if(//fileload했을때)
-		time=savetime+(end-start)/1000;
+		m_time=savetime+(end-start)/1000;
 	else
-		time= (end-start)/1000;
+		m_time= (end-start)/1000;
 	alltime+=time;
-	printf("클리어 시간: %3f\n",time);
-}
+	printf("클리어 시간: %3f\n",m_time);
+}*/
 //Jae-hyun
 int ctrl_key(char ch)
 {
