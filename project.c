@@ -14,7 +14,7 @@
 
   1. read map: clear(on main)
   2. error: clear(on main)
-  3. input name: clear
+  3. input name: clear(on main)
   4. game clear: jae-woo
   5. ranking: jae-hyun
   6. save ranking: jae-woo
@@ -25,7 +25,7 @@
   11. replay: jae-hyun
   12. file load: jae-woo
   13. save: jae-woo
-  14. help: clear
+  14. help: clear(on main)
   15. top: cheol-soon
   16. each map top: cheol-soon
   17. time: jae-woo
@@ -89,32 +89,16 @@ int readmap(void){
 
 	while (fscanf(mapf, "%c", &a) != EOF)
 	{
-		if(a == ' '){
-			map[b][i][j] = ' ';
-			j++;
-		}
-		else if(a == '#'){
-			map[b][i][j] = '#';
-			j++;
-		}
-		else if(a == '$'){
-			map[b][i][j] = '$';
-			j++;
-		}
-		else if(a =='O'){
-			map[b][i][j] = 'O';
-			j++;
-		}
-		else if(a =='@'){
-			map[b][i][j] = '@';
+		if((a == ' ')||(a == '#')||(a == '$')||(a =='O')||(a =='@')){
+			map[b][i][j] = a;
 			j++;
 		}
 		else if(a =='\n'){
 			i++;
 			j = 0;
 		}
-		else if (a == 97){
-			mapsize[b] = i;
+		else if (a == 97||a =='e'){
+			mapsize[b] = ++i;
 			b++;
 			i =-1;
 			j =0;
@@ -155,6 +139,33 @@ int command(char x){
 	{
 		case 'd':
 			displayhelp();
+			break;
+		case 'u':
+			break;
+		case 'r':
+			break;
+		case 'n':
+			stage =0;
+			playmap(stage);
+			break;
+		case 'e':
+			system("clear");
+			printf("SEE YOU ");
+			for(int i = 0; i <10; i++)
+				printf("%c", name[i]);
+			printf("....\n");
+			exit(1);
+			break;
+		case 's':
+			break;
+		case 'f':
+			break;
+		case 't':
+			break;
+		case '1':
+			stage++;
+			playmap(stage);
+			break;
 
 	}
 }
@@ -170,12 +181,20 @@ int get_key(void)
 
 	if((a == 'h')||(a == 'j')||(a == 'k')||(a == 'l')){
 		ctrl_key(a);
-		a = ' ';
+		a = 0;
 	}
 	else if(a == '\n')
 		command(a_sav);
 	else;
 	a_sav = a;
+}
+
+int printname(void){
+	
+	printf("\tHello ");
+	for(int i = 0; i < 10; i++)
+		printf("%c", name[i]);
+	printf("\n");
 }
 
 //Cheol-soon
@@ -184,9 +203,14 @@ int inputname(void)
 	int nm;
 
 	printf("사용자 명을 입력하시오(최대10자): ");
-	for(nm=0;nm<10;nm++)
-	   	scanf("%c", &name[nm]); //입력받은 값을 name배열값에 지정.
-
+	for(nm =0; nm<10; nm++){
+		scanf("%c", &name[nm]); //입력받은 값을 name배열값에 지정.
+		if(name[nm] == '\n')
+		{
+			name[nm] = 0;
+			break;
+		}
+	}
 	return 0;
 }
 
@@ -343,10 +367,14 @@ int ctrl_key(char ch)
 
 int main(void)
 {
+	system("clear");
 	readmap();
-	playmap(stage);
 	error();
+	playmap(stage);
+	inputname();
+	system("clear");
 	while(1){
+		printname();
 		showgame();
 		get_key();
 		system("clear");
