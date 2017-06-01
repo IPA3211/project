@@ -1,7 +1,7 @@
 /*********************
 * date:
 * group: handsome
-* student ID: 20170259,20170319,20170293,
+* student ID: 20170259,20170319,20170293,20170289
 *
 *
 ********************/
@@ -32,14 +32,14 @@
 *********************/
 
 /* FOR WINDOWS */
-//#include <termio.h>
+#include <termio.h>
 
 /* FOR MAC OS X */
-#include <termios.h>
+//#include <termios.h>
 
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <time.h>
 /* FOR ERROR FIX */
 int ctrl_key(char ch);
 //common var
@@ -51,6 +51,8 @@ int mapsize[5];
 int stage = 0;
 
 char name[10];
+clock_t start,end;
+double time,alltime,savetime;
 //common func
 int getch(void){
 	int ch;
@@ -234,13 +236,55 @@ int error(void){
         }
     }
 }
+int gameclear(void)
+//game클리어 했을 때
+{
+    printf("축하합니다. 모든 게임을 완료했습니다.\n");
+    exit(1);
+}
+int fileload(void)
+{ //f키를 눌렀을 때
+	FILE *sokoban;
+	sokoban=fopen("sokoban.txt","r");
+	for(i=0;i<30;i++)
+		for(j=0;j<30;j++)
+			fscanf(sokoban,"%c",&p_map[i][j]);
+	fscanf(sokoban,"%3f",&savetime);
+	fscanf(sokoban,"%d",&stage);
+	fclose(sokoban);
+	start=clock();
+}
+int save(void)
+{ //s키
+	end=clock();
+	savetime= (end-start)/1000
+	FILE *sokoban;
+	sokoban=fopen("sokoban.txt","w");
+	for(i=0; i<30;i++)
+		for(j=0; j<30; J++)
+		{
+			fprintf(sokoban,"%c",p_map[i][j]);
+		}
+	fprintf(sokoban,"%3f",savetime);
+	fprintf(sokoban,"%d",stage);
+	fclose(sokoban);
+	start=clock()
+}
+int timeprint(void){
+	if(//fileload했을때)
+		time=savetime+(end-start)/1000;
+	else
+		time= (end-start)/1000;
+	alltime+=time;
+	printf("클리어 시간: %3f\n",time);
+}
 //Jae-hyun
 int ctrl_key(char ch)
 {
 	int a, b;
   for(int i=0;i<30;i++)
   {
-    for(int j=0;j<30;j++)
+    for(int j=0;j<3;j++)
     {
       if ((p_map[i][j] == '@')||(p_map[i][j] == '*')){
         b = i, a = j;
@@ -352,3 +396,4 @@ int main(void)
 		system("clear");
 	}
 }
+
