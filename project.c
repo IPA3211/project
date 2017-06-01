@@ -308,7 +308,7 @@ int ctrl_key(char ch)
 	int a, b;
   for(int i=0;i<30;i++)
   {
-    for(int j=0;j<3;j++)
+    for(int j=0;j<30;j++)
     {
       if ((p_map[i][j] == '@')||(p_map[i][j] == '*')){
         b = i, a = j;
