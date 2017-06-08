@@ -32,10 +32,10 @@
  *********************/
 
 /* FOR WINDOWS */
-#include <termio.h>
+//#include <termio.h>
 
 /* FOR MAC OS X */
-//#include <termios.h>
+#include <termios.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -52,6 +52,7 @@ int stage = 0;
 int load=0;
 
 char name[10];
+char undo[6];
 clock_t start,end;
 double m_time,alltime=0,savetime;
 //common func
@@ -144,6 +145,7 @@ int command(char x){
 			displayhelp();
 			break;
 		case 'u':
+      undo_key();
 			break;
 		case 'r':
 			break;
@@ -186,6 +188,12 @@ int get_key(void)
 
 	if((a == 'h')||(a == 'j')||(a == 'k')||(a == 'l')){
 		ctrl_key(a);
+		undo[4] = undo[3];
+		undo[3] = undo[2];
+		undo[2] = undo[1];
+		undo[1] = undo[0];
+		undo[0] = a;
+
 		a = 0;
 	}
 	else if(a == '\n')
@@ -240,8 +248,25 @@ int displayhelp(void){
 		displayhelp();
 }
 
-/* new(n) */
-int newgame(void);
+/* undo(u) */
+int undo_key(void)
+{
+		if(undo[0] == 'h')
+			ctrl_key('l');
+		else if(undo[0] == 'j')
+			ctrl_key('k');
+		else if(undo[0] == 'k')
+			ctrl_key('j');
+		else if(undo[0] == 'l')
+			ctrl_key('h');
+		undo[0] = undo[1];
+		undo[1] = undo[2];
+		undo[2] = undo[3];
+		undo[3] = undo[4];
+		undo[4] = ' ';
+			//이후 화물의 움직임은 생각해본다. 화물의 움직임의 배열을 하나 만듦.
+      return 0;
+}
 
 
 
@@ -333,7 +358,7 @@ int ctrl_key(char ch)
         }
     }
     //right
-    
+
     if((ch == 'l')&&(p_map[b][a+1] == ' '))//player heading to space
     {
         if(brilliant == 0)
@@ -354,7 +379,7 @@ int ctrl_key(char ch)
     {}
     else if((ch == 'l')&&(p_map[b][a+1]) == '$')//player confronting package
     {
-        
+
         if(p_map[b][a+2] == '#')//package confronting the wall
         {}
         else if(p_map[b][a+2] == ' ')//package heading to space
@@ -403,7 +428,7 @@ int ctrl_key(char ch)
     }
     if((ch == 'l')&&((p_map[b][a+1] == '$')||(p_map[b][a+1] == '*'))&&((p_map[b][a+2] == '$')||(p_map[b][a+2] == '*')))
     {}
-    
+
     //left
     if((ch == 'h')&&((p_map[b][a-1] == ' ')||p_map[b][a-1] == 'O'))//player heading to space
     {
@@ -425,7 +450,7 @@ int ctrl_key(char ch)
     {}
     else if((ch == 'h')&&(p_map[b][a-1]) == '$')//player confronting package
     {
-        
+
         if(p_map[b][a-2] == '#')//package confronting the wall
         {}
         else if(p_map[b][a-2] == ' ')//package heading to space
@@ -488,7 +513,7 @@ int ctrl_key(char ch)
     {}
     else if((ch == 'k')&&(p_map[b+1][a]) == '$')//player confronting package
     {
-        
+
         if(p_map[b+2][a] == '#')//package confronting the wall
         {}
         else if(p_map[b+2][a] == ' ')//package heading to space
@@ -551,7 +576,7 @@ int ctrl_key(char ch)
     {}
     else if((ch == 'j')&&(p_map[b-1][a]) == '$')//player confronting package
     {
-        
+
         if(p_map[b-2][a] == '#')//package confronting the wall
         {}
         else if(p_map[b-2][a] == ' ')//package heading to space
@@ -594,14 +619,22 @@ int ctrl_key(char ch)
     if((ch == 'j')&&((p_map[b-1][a] == '$')||(p_map[b-1][a] == '*'))&&((p_map[b-2][a] == '$')||(p_map[b-2][a] == '*')))
     {}//main
 }
-    int main(void)
-    {
+
+int main(void)
+{
+	system("clear");
+    readmap();
+    error();
+    playmap(stage);
+	inputname();
+    system("clear");
+    while(1){
+        printname();
+        showgame();
+        get_key();
+        gameclear();
         system("clear");
-        readmap();
-        error();
-        playmap(stage);
-        inputname();
-        system("clear");
+<<<<<<< HEAD
         while(1){
             printname();
             showgame();
@@ -610,5 +643,7 @@ int ctrl_key(char ch)
             gameclear();
             system("clear");
         }
+=======
+>>>>>>> 116e02479af95b4fe47b167b758f590b99cefbd4
     }
-
+}
