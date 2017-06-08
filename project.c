@@ -52,7 +52,7 @@ int stage = 0;
 int load=0;
 
 char name[10];
-char undo[6];
+char undo[5][2];
 clock_t start,end;
 double m_time,alltime=0,savetime;
 //common func
@@ -188,13 +188,11 @@ int get_key(void)
 
 	if((a == 'h')||(a == 'j')||(a == 'k')||(a == 'l')){
 		ctrl_key(a);
-		undo[4] = undo[3];
-		undo[3] = undo[2];
-		undo[2] = undo[1];
-		undo[1] = undo[0];
-		undo[0] = a;
+    for(int i = 0; i <2; i++)
+      for(int j = 0; j <5; j++){
 
-		a = 0;
+      }
+    a = 0;
 	}
 	else if(a == '\n')
 		command(a_sav);
@@ -251,24 +249,21 @@ int displayhelp(void){
 /* undo(u) */
 int undo_key(void)
 {
-		if(undo[0] == 'h')
+  if(undo[0][0] == 'h')
 			ctrl_key('l');
-		else if(undo[0] == 'j')
+		else if(undo[0][0] == 'j')
 			ctrl_key('k');
-		else if(undo[0] == 'k')
+		else if(undo[0][0] == 'k')
 			ctrl_key('j');
-		else if(undo[0] == 'l')
+		else if(undo[0][0] == 'l')
 			ctrl_key('h');
 		undo[0] = undo[1];
 		undo[1] = undo[2];
 		undo[2] = undo[3];
 		undo[3] = undo[4];
 		undo[4] = ' ';
-			//이후 화물의 움직임은 생각해본다. 화물의 움직임의 배열을 하나 만듦.
-      return 0;
+  return 0;
 }
-
-
 
 //Jae-woo
 int error(void){
@@ -343,282 +338,166 @@ int mapclear(void)
 		timeprint();
 	}
 }
-//Jae-hyun
-int ctrl_key(char ch)
-{
-    int a, b, brilliant;
+
+  //Jae-hyun**********************************************
+  int ctrl_key(char ch)
+  {
+    int a, b, c, d;
+
     for(int i=0;i<30;i++)
     {
-        for(int j=0;j<30;j++)
-        {
-            if ((p_map[i][j] == '@')||(p_map[i][j] == '*')){
-                b = i, a = j;
-                break;
-            }
+      for(int j=0;j<30;j++)
+      {
+        if ((p_map[i][j] == '@')||(p_map[i][j] == 'P')){
+          b = i, a = j;
+          break;
         }
-    }
-    //right
+      }
+     }
 
-    if((ch == 'l')&&(p_map[b][a+1] == ' '))//player heading to space
-    {
-        if(brilliant == 0)
+      switch (ch) {
+        case 'l':
+          c = 1;
+          d = 0;
+          break;
+        case 'k':
+          c = 0;
+          d = 1;
+          break;
+        case 'j':
+          c = 0;
+          d = -1;
+          break;
+        case 'h':
+          c = -1;
+          d = 0;
+          break;
+      }
+
+      if(p_map[b][a] == '@')//user on space*******************
+      {
+        if((p_map[b+d][a+c] == '#'))//wall  1
+        {   }
+        else if((p_map[b+d][a+c] == 'O'))//location  2
         {
-            p_map[b][a] = p_map[b][a+1];
-            p_map[b][a+1] = '@';
-            a += 1;
+          p_map[b+d][a+c] = 'P';
+          p_map[b][a] = ' ';
         }
-        else if(brilliant == 1)
+
+        else if((p_map[b+d][a+c] == '$'))//package  3
         {
+          if(p_map[b+(d*2)][a+(c*2)] == '#')//package facing wall
+          {   }
+          else if(p_map[b+(d*2)][a+(c*2)] == ' ')//package facing space
+          {
+            p_map[b+(d*2)][a+(c*2)] = '$';
+            p_map[b+d][a+c] = '@';
+            p_map[b][a] = ' ';
+          }
+          else if(p_map[b+(d*2)][a+(c*2)] == 'O')//package facing location
+          {
+            p_map[b+(d*2)][a+(c*2)] = '*';
+            p_map[b+d][a+c] = '@';
+            p_map[b][a] = ' ';
+          }
+          else if(p_map[b+(d*2)][a+(c*2)] == '*')//package facing other package on location
+          {   }
+          else if(p_map[b+d][a+c] == '$')//packaage facing other package
+          {   }
+        }
+
+        else if((p_map[b+d][a+c] == ' '))//space  4
+        {
+          p_map[b+d][a+c] = '@';
+          p_map[b][a] = ' ';
+        }
+
+        else if((p_map[b+d][a+c] == '*'))//package on the location  5
+        {
+          if(p_map[b+(d*2)][a+(c*2)] == '#')//package on location facing wall
+          {   }
+          else if(p_map[b+(d*2)][a+(c*2)] == ' ')//package on location facing space
+          {
+            p_map[b+(d*2)][a+(c*2)] = '$';
+            p_map[b+d][a+c] = 'P';
+            p_map[b][a] = ' ';
+          }
+          else if(p_map[b+(d*2)][a+(c*2)] == 'O')//package on location facing location
+          {
+            p_map[b+(d*2)][a+(c*2)] = '*';
+            p_map[b+d][a+c] = 'P';
+            p_map[b][a] = ' ';
+          }
+          else if(p_map[b+(d*2)][a+(c*2)] == '*')//package on location facing other package on location
+          {   }
+          else if(p_map[b+d][a+c] == '$')//packaage on location facing other package
+          {   }
+        }
+      }
+      else if(p_map[b][a] == 'P')//user on the location******************
+      {
+        if((p_map[b+d][a+c] == '#'))//wall                1
+        {   }
+        else if((p_map[b+d][a+c] == '$'))//package        2
+        {
+          if(p_map[b+(d*2)][a+(c*2)] == '#')//package facing wall
+          {   }
+          else if(p_map[b+(d*2)][a+(c*2)] == ' ')//package facing space
+          {
+            p_map[b+(d*2)][a+(c*2)] = '$';
+            p_map[b+d][a+c] = '@';
             p_map[b][a] = 'O';
-            p_map[b][a+1] = '@';
-            a += 1;
-            brilliant = 0;
-        }
-    }
-    else if((ch == 'l')&&(p_map[b][a+1]) == '#')//player confronting wall
-    {}
-    else if((ch == 'l')&&(p_map[b][a+1]) == '$')//player confronting package
-    {
-
-        if(p_map[b][a+2] == '#')//package confronting the wall
-        {}
-        else if(p_map[b][a+2] == ' ')//package heading to space
-        {
-            p_map[b][a] = p_map[b][a+2];
-            p_map[b][a+1] = '@';
-            p_map[b][a+2] = '$';
-            a += 1;
-        }
-    }
-    else if((ch == 'l')&&(p_map[b][a+1] == 'O'))
-    {
-        p_map[b][a+1] = p_map[b][a];
-        p_map[b][a] = ' ';
-        brilliant = 1;//player on the location
-        a += 1;
-        if(brilliant == 1)
-        {
+          }
+          else if(p_map[b+(d*2)][a+(c*2)] == 'O')//package facing location
+          {
+            p_map[b+(d*2)][a+(c*2)] = '*';
+            p_map[b+d][a+c] = 'P';
             p_map[b][a] = 'O';
-            p_map[b][a+1] = '@';
-            a += 1;
-            brilliant = 0;
+          }
+          else if(p_map[b+(d*2)][a+(c*2)] == '*')//package facing other package on location
+          {   }
+          else if(p_map[b+d][a+c] == '$')//packaage facing other package
+          {   }
         }
-    }
-    if((ch == 'l')&&(p_map[b][a+1] == '$')&&(p_map[b][a+2] == 'O'))
-    {
-        p_map[b][a+1] = p_map[b][a];
-        p_map[b][a+2] = '*';
-        p_map[b][a] = ' ';
-        a += 1;
-    }
-    else if((ch == 'l')&&(p_map[b][a+1] == '*')&&(p_map[b][a+2] == 'O'))
-    {
-        p_map[b][a] = 'O';
-        p_map[b][a+1] = p_map[b][a+2];
-        p_map[b][a+2] = '*';
-        a += 1;
-        brilliant = 1;
-    }
-    else if((ch == 'l')&&(p_map[b][a+1] == '*')&&(p_map[b][a+2] == ' '))
-    {
-        p_map[b][a+1] = p_map[b][a];
-        p_map[b][a] = 'O';
-        p_map[b][a+2] = '$';
-        a += 1;
-    }
-    if((ch == 'l')&&((p_map[b][a+1] == '$')||(p_map[b][a+1] == '*'))&&((p_map[b][a+2] == '$')||(p_map[b][a+2] == '*')))
-    {}
 
-    //left
-    if((ch == 'h')&&((p_map[b][a-1] == ' ')||p_map[b][a-1] == 'O'))//player heading to space
-    {
-        if(brilliant == 0)
+        else if((p_map[b+d][a+c] == '*'))//package on the location3
         {
-            p_map[b][a] = p_map[b][a-1];
-            p_map[b][a-1] = '@';
-            a -= 1;
-        }
-        else if(brilliant == 1)
-        {
+          if(p_map[b+(d*2)][a+(c*2)] == '#')//package on location facing wall
+          {   }
+          else if(p_map[b+(d*2)][a+(c*2)] == ' ')//package on location facing space
+          {
+            p_map[b+(d*2)][a+(c*2)] = '$';
+            p_map[b+d][a+c] = 'P';
             p_map[b][a] = 'O';
-            p_map[b][a+1] = '@';
-            a -= 1;
-            brilliant = 0;
-        }
-    }
-    else if((ch == 'h')&&(p_map[b][a-1]) == '#')//player confronting wall
-    {}
-    else if((ch == 'h')&&(p_map[b][a-1]) == '$')//player confronting package
-    {
-
-        if(p_map[b][a-2] == '#')//package confronting the wall
-        {}
-        else if(p_map[b][a-2] == ' ')//package heading to space
-        {
-            p_map[b][a] = p_map[b][a-2];
-            p_map[b][a-1] = '@';
-            p_map[b][a-2] = '$';
-            a -= 1;
-        }
-    }
-    else if((ch == 'h')&&(p_map[b][a-1] == 'O'))
-    {
-        p_map[b][a-1] = p_map[b][a];
-        p_map[b][a] = ' ';
-        brilliant = 1;//player on the location
-        a -= 1;
-    }
-    if((ch == 'h')&&(p_map[b][a-1] == '$')&&(p_map[b][a-2] == 'O'))
-    {
-        p_map[b][a-1] = p_map[b][a];
-        p_map[b][a-2] = '*';
-        p_map[b][a] = ' ';
-        a -= 1;
-    }
-    else if((ch == 'h')&&(p_map[b][a-1] == '*')&&(p_map[b][a-2] == 'O'))
-    {
-        p_map[b][a] = 'O';
-        p_map[b][a-1] = p_map[b][a-2];
-        p_map[b][a-2] = '*';
-        a -= 1;
-        brilliant = 1;
-    }
-    else if((ch == 'h')&&(p_map[b][a-1] == '*')&&(p_map[b][a-2] == ' '))
-    {
-        p_map[b][a-1] = p_map[b][a];
-        p_map[b][a] = 'O';
-        p_map[b][a-2] = '$';
-        a -= 1;
-    }
-    if((ch == 'h')&&((p_map[b][a-1] == '$')||(p_map[b][a-1] == '*'))&&((p_map[b][a-2] == '$')||(p_map[b][a-2] == '*')))
-    {}
-    //up
-    if((ch == 'k')&&((p_map[b+1][a] == ' ')||p_map[b+1][a] == 'O'))//player heading to space
-    {
-        if(brilliant == 0)
-        {
-            p_map[b][a] = p_map[b+1][a];
-            p_map[b+1][a] = '@';
-            b += 1;
-        }
-        else if(brilliant == 1)
-        {
+          }
+          else if(p_map[b+(d*2)][a+(c*2)] == 'O')//package on location facing location
+          {
+            p_map[b+(d*2)][a+(c*2)] = '*';
+            p_map[b+d][a+c] = 'P';
             p_map[b][a] = 'O';
-            p_map[b+1][a] = '@';
-            b += 1;
-            brilliant = 0;
+          }
+          else if(p_map[b+(d*2)][a+(c*2)] == '*')//package on location facing other package on location
+          {   }
+          else if(p_map[b+d][a+c] == '$')//packaage on location facing other package
+          {   }
         }
-    }
-    else if((ch == 'k')&&(p_map[b+1][a]) == '#')//player confronting wall
-    {}
-    else if((ch == 'k')&&(p_map[b+1][a]) == '$')//player confronting package
-    {
 
-        if(p_map[b+2][a] == '#')//package confronting the wall
-        {}
-        else if(p_map[b+2][a] == ' ')//package heading to space
+        else if((p_map[b+d][a+c] == ' '))//space              4
         {
-            p_map[b][a] = p_map[b+2][a];
-            p_map[b+1][a] = '@';
-            p_map[b+2][a] = '$';
-            b += 1;
+          p_map[b+d][a+c] = '@';
+          p_map[b][a] = 'O';
         }
-    }
-    else if((ch == 'k')&&(p_map[b+1][a] == 'O'))
-    {
-        p_map[b+1][a] = p_map[b][a];
-        p_map[b][a] = ' ';
-        brilliant = 1;//player on the location
-        b += 1;
-    }
-    if((ch == 'k')&&(p_map[b+1][a] == '$')&&(p_map[b+2][a] == 'O'))
-    {
-        p_map[b+1][a] = p_map[b][a];
-        p_map[b+2][a] = '*';
-        p_map[b][a] = ' ';
-        b += 1;
-    }
-    else if((ch == 'k')&&(p_map[b+1][a] == '*')&&(p_map[b+2][a] == 'O'))
-    {
-        p_map[b][a] = 'O';
-        p_map[b+1][a] = p_map[b+2][a];
-        p_map[b+2][a] = '*';
-        b += 1;
-        brilliant = 1;
-    }
-    else if((ch == 'k')&&(p_map[b+1][a] == '*')&&(p_map[b+2][a] == ' '))
-    {
-        p_map[b+1][a] = p_map[b][a];
-        p_map[b][a] = 'O';
-        p_map[b+2][a] = '$';
-        b += 1;
-    }
-    if((ch == 'k')&&((p_map[b+1][a] == '$')||(p_map[b+1][a] == '*'))&&((p_map[b+2][a] == '$')||(p_map[b+2][a] == '*')))
-    {}
-    //down
-    if((ch == 'j')&&((p_map[b-1][a] == ' ')||p_map[b-1][a] == 'O'))//player heading to space
-    {
-        if(brilliant == 0)
+        else if((p_map[b+d][a+c] == 'O'))//location          5
         {
-            p_map[b][a] = p_map[b-1][a];
-            p_map[b-1][a] = '@';
-            b -= 1;
-        }
-        else if(brilliant == 1)
-        {
-            p_map[b][a] = 'O';
-            p_map[b-1][a] = '@';
-            b -= 1;
-            brilliant = 0;
-        }
+          p_map[b+d][a+c] = 'P';
+          p_map[b][a] = 'O';
+                }
+      }
+      else if((p_map[b][a] != '@')||(p_map[b][a] != 'P'))
+      printf("move error");
+      else
+      printf("error");
     }
-    else if((ch == 'j')&&(p_map[b-1][a]) == '#')//player confronting wall
-    {}
-    else if((ch == 'j')&&(p_map[b-1][a]) == '$')//player confronting package
-    {
-
-        if(p_map[b-2][a] == '#')//package confronting the wall
-        {}
-        else if(p_map[b-2][a] == ' ')//package heading to space
-        {
-            p_map[b][a] = p_map[b-2][a];
-            p_map[b-1][a] = '@';
-            p_map[b-2][a] = '$';
-            b -= 1;
-        }
-    }
-    else if((ch == 'j')&&(p_map[b-1][a] == 'O'))
-    {
-        p_map[b-1][a] = p_map[b][a];
-        p_map[b][a] = ' ';
-        brilliant = 1;//player on the location
-        b -= 1;
-    }
-    if((ch == 'j')&&(p_map[b-1][a] == '$')&&(p_map[b-2][a] == 'O'))
-    {
-        p_map[b-1][a] = p_map[b][a];
-        p_map[b-2][a] = '*';
-        p_map[b][a] = ' ';
-        b -= 1;
-    }
-    else if((ch == 'j')&&(p_map[b-1][a] == '*')&&(p_map[b-2][a] == 'O'))
-    {
-        p_map[b][a] = 'O';
-        p_map[b-1][a] = p_map[b-2][a];
-        p_map[b-2][a] = '*';
-        b -= 1;
-        brilliant = 1;
-    }
-    else if((ch == 'j')&&(p_map[b-1][a] == '*')&&(p_map[b-2][a] == ' '))
-    {
-        p_map[b-1][a] = p_map[b][a];
-        p_map[b][a] = 'O';
-        p_map[b-2][a] = '$';
-        b -= 1;
-    }
-    if((ch == 'j')&&((p_map[b-1][a] == '$')||(p_map[b-1][a] == '*'))&&((p_map[b-2][a] == '$')||(p_map[b-2][a] == '*')))
-    {}//main
-}
 
 int main(void)
 {
