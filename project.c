@@ -634,16 +634,6 @@ int main(void)
         get_key();
         gameclear();
         system("clear");
-<<<<<<< HEAD
-        while(1){
-            printname();
-            showgame();
-            get_key();
-	    start=clock();
-            gameclear();
-            system("clear");
         }
-=======
->>>>>>> 116e02479af95b4fe47b167b758f590b99cefbd4
     }
 }
