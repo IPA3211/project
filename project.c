@@ -32,10 +32,10 @@
  *********************/
 
 /* FOR WINDOWS */
-//#include <termio.h>
+#include <termio.h>
 
 /* FOR MAC OS X */
-#include <termios.h>
+//#include <termios.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -49,6 +49,7 @@ char p_map[30][30];
 int  mapsize[5];
 
 int stage = 0;
+int load=0;
 
 char name[10];
 clock_t start,end;
@@ -282,6 +283,7 @@ int fileload(void)
 	fscanf(sokoban,"%3f",&savetime);
 	fscanf(sokoban,"%d",&stage);
 	fclose(sokoban);
+	load=1;
 	start=clock();
 }
 int save(void)
@@ -300,14 +302,14 @@ int save(void)
 	fclose(sokoban);
 	start=clock();
 }
-/*int timeprint(void){
-  if(//fileload했을때)
-  m_time=savetime+(end-start)/1000;
+int timeprint(void){
+  if(load==1)
+  	m_time=savetime+((end-start)/1000);
   else
-  m_time= (end-start)/1000;
-  alltime+=time;
+  	m_time= (end-start)/1000;
+  alltime+=m_time;
   printf("클리어 시간: %3f\n",m_time);
-  }*/
+  }
 //Jae-hyun
 int ctrl_key(char ch)
 {
@@ -600,3 +602,4 @@ int ctrl_key(char ch)
             system("clear");
         }
     }
+
