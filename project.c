@@ -586,20 +586,20 @@ int ctrl_key(char ch)
     if((ch == 'j')&&((p_map[b-1][a] == '$')||(p_map[b-1][a] == '*'))&&((p_map[b-2][a] == '$')||(p_map[b-2][a] == '*')))
     {}//main
 }
-    int main(void)
-    {
-        system("clear");
-        readmap();
-        error();
-        playmap(stage);
-        inputname();
-        system("clear");
-        while(1){
-            printname();
-            showgame();
-            get_key();
-            gameclear();
-            system("clear");
-        }
-    }
 
+int main(void)
+{
+	system("clear");
+    readmap();
+    error();
+    playmap(stage);
+	inputname();
+    system("clear");
+    while(1){
+        printname();
+        showgame();
+        get_key();
+        gameclear();
+        system("clear");
+    }
+}
