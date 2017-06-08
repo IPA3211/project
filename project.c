@@ -32,10 +32,10 @@
  *********************/
 
 /* FOR WINDOWS */
-#include <termio.h>
+//#include <termio.h>
 
 /* FOR MAC OS X */
-///#include <termios.h>
+#include <termios.h>
 
 #include <stdio.h>
 #include <stdlib.h>
