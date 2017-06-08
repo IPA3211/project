@@ -53,7 +53,7 @@ int load=0;
 
 char name[10];
 clock_t start,end;
-double m_time,alltime,savetime;
+double m_time,alltime=0,savetime;
 //common func
 int getch(void){
 	int ch;
@@ -310,6 +310,14 @@ int timeprint(void){
   alltime+=m_time;
   printf("클리어 시간: %3f\n",m_time);
   }
+int mapclear(void)
+{
+	if(box==0)
+	{
+		end=clock();
+		timeprint();
+	}
+}
 //Jae-hyun
 int ctrl_key(char ch)
 {
@@ -598,6 +606,7 @@ int ctrl_key(char ch)
             printname();
             showgame();
             get_key();
+	    start=clock();
             gameclear();
             system("clear");
         }
