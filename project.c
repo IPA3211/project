@@ -32,10 +32,10 @@
  *********************/
 
 /* FOR WINDOWS */
-//#include <termio.h>
+#include <termio.h>
 
 /* FOR MAC OS X */
-#include <termios.h>
+//#include <termios.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -53,7 +53,7 @@ int load=0;
 
 char name[10];
 char undo[6];
-clock_t start,end;
+time_t start,end;
 double m_time,alltime=0,savetime;
 //common func
 int getch(void){
@@ -309,12 +309,12 @@ int fileload(void)
 	fscanf(sokoban,"%d",&stage);
 	fclose(sokoban);
 	load=1;
-	start=clock();
+	start=time(NULL);
 }
 int save(void)
 { //s키
-	end=clock();
-	savetime= (end-start)/1000;
+	end=time(NULL);
+	savetime= difftime(end,start);
 	FILE *sokoban;
 	sokoban=fopen("sokoban.txt","w");
 	for(int i=0; i<30;i++)
@@ -325,21 +325,21 @@ int save(void)
 	fprintf(sokoban,"%3f",savetime);
 	fprintf(sokoban,"%d",stage);
 	fclose(sokoban);
-	start=clock();
+	start=time(NULL);
 }
 int timeprint(void){
   if(load==1)
-  	m_time=savetime+((end-start)/1000);
+  	m_time=savetime+(difftime(end,start));
   else
-  	m_time= (end-start)/1000;
+  	m_time= difftime(end,start);
   alltime+=m_time;
-  printf("클리어 시간: %3f\n",m_time);
+  printf("클리어 시간: %f\n",m_time);
   }
 int mapclear(void)
 {
-	if(box==0)
+	if(box_num==0)
 	{
-		end=clock();
+		end=time(NULL);
 		timeprint();
 	}
 }
@@ -632,6 +632,7 @@ int main(void)
         printname();
         showgame();
         get_key();
+	start=time(NULL);
         gameclear();
         system("clear");
         }
