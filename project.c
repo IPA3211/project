@@ -50,11 +50,12 @@ int  mapsize[5];
 
 int stage = 0;
 int load=0;
+int box = 0;
 
 char name[10];
 char undo[5][2];
-clock_t start,end;
-double m_time,alltime=0,savetime;
+time_t start,end;
+float m_time,alltime=0,savetime;
 //common func
 int getch(void){
 	int ch;
@@ -145,13 +146,15 @@ int command(char x){
 			displayhelp();
 			break;
 		case 'u':
-      undo_key();
+    	    undo_key();
 			break;
 		case 'r':
+			playmap(stage);
 			break;
 		case 'n':
 			stage =0;
 			playmap(stage);
+			start=time(NULL);
 			break;
 		case 'e':
 			system("clear");
@@ -373,16 +376,16 @@ int fileload(void)
 	for(int i=0;i<30;i++)
 		for(int j=0;j<30;j++)
 			fscanf(sokoban,"%c",&p_map[i][j]);
-	fscanf(sokoban,"%3f",&savetime);
+	fscanf(sokoban,"%f",&savetime);
 	fscanf(sokoban,"%d",&stage);
 	fclose(sokoban);
 	load=1;
-	start=clock();
+	start=time(NULL);
 }
 int save(void)
 { //s키
-	end=clock();
-	savetime= (end-start)/1000;
+	end=time(NULL);
+	savetime=end-start;
 	FILE *sokoban;
 	sokoban=fopen("sokoban.txt","w");
 	for(int i=0; i<30;i++)
@@ -390,46 +393,46 @@ int save(void)
 		{
 			fprintf(sokoban,"%c",p_map[i][j]);
 		}
-	fprintf(sokoban,"%3f",savetime);
+	fprintf(sokoban,"%f",savetime);
 	fprintf(sokoban,"%d",stage);
 	fclose(sokoban);
-	start=clock();
+	start=time(NULL);
 }
 
 int timeprint(void){
   if(load==1)
-  	m_time=savetime+((end-start)/1000);
+  	m_time=savetime+(end-start);
   else
-  	m_time= (end-start)/1000;
+  	m_time= end-start;
   alltime+=m_time;
-  printf("클리어 시간: %3f\n",m_time);
+  printf("클리어 시간: %f\n",m_time);
   }
 
 int mapclear(void)
 {
-//	if(box==0)
-//	{
-//		end=clock();
-//		timeprint();
-//		stage++;
-//	}
+	if(box==0)
+	{
+		time(&end);
+		timeprint();
+		stage++;
+		playmap(stage);
+	}
 }
 
   //Jae-hyun**********************************************
 int ctrl_key(char ch)
 {
     int a, b, c, d;
-
     for(int i=0;i<30;i++)
     {
       for(int j=0;j<30;j++)
       {
-        if ((p_map[i][j] == '@')||(p_map[i][j] == 'P')){
-          b = i, a = j;
-          break;
-        }
+		  if ((p_map[i][j] == '@') || (p_map[i][j] == 'P')) {
+			  b = i, a = j;
+		  }
       }
-     }
+    }
+     
 
       switch (ch) {
         case 'l':
@@ -613,8 +616,22 @@ int ctrl_key(char ch)
       printf("move error");
       else
       printf("error");
-    }
+}
 
+int box_check(void)
+{	
+	box = 0;
+    for(int i=0;i<30;i++)
+    {
+      for(int j=0;j<30;j++)
+      {
+		  if (p_map[i][j] == '$')
+			  box++;
+      }
+    }
+}
+
+//main
 int main(void)
 {
 	system("clear");
@@ -623,12 +640,15 @@ int main(void)
     playmap(stage);
 	inputname();
     system("clear");
+	time(&start);
     while(1){
         printname();
         showgame();
         get_key();
+		box_check();
 		mapclear();
         gameclear();
         system("clear");
-        }
+    }
+   
 }
