@@ -53,13 +53,12 @@ int player_x, player_y;//player's x,y
 
 
 int stage = 0;
-int load=0;
 int box = 0;
 
 char name[10];
 char undo[2][5] = {0,0,0,0,0,0,0,0,0,0};
 time_t start,end;
-float m_time,alltime=0,savetime;
+float m_time,savetime=0;
 //common func
 int getch(void){
 	int ch;
@@ -151,15 +150,24 @@ int command(char x){
 			break;
 		case 'u':
 			if(undo[0][0] != 0)
-      	undo_key();
-				break;
+	      	undo_key();
+			break;
 		case 'r':
 			playmap(stage);
+			for (int i =0 ; i < 10; i++)
+			{
+				undo[0][i] = 0;
+			}
 			break;
 		case 'n':
 			stage =0;
+			savetime = 0;
 			playmap(stage);
 			start=time(NULL);
+			for (int i =0 ; i < 10; i++)
+			{
+				undo[0][i] = 0;
+			}
 			break;
 		case 'e':
 			system("clear");
@@ -389,17 +397,20 @@ int fileload(void)
 	sokoban=fopen("sokoban.txt","r");
 	for(int i=0;i<30;i++)
 		for(int j=0;j<30;j++)
-			fscanf(sokoban,"%c",&p_map[i][j]);
-	fscanf(sokoban,"%f",&savetime);
-	fscanf(sokoban,"%d",&stage);
+			fscanf(sokoban,"%c",&p_map[i][j]);	
+	for(int k = 0; k <10; k++)
+		fscanf(sokoban,"%c", &name[k]);
+	for(int h = 0; h < 10; h++)
+		fscanf(sokoban,"%d", &undo[0][h]);
+	fscanf(sokoban,"%f\n",&savetime);
+	fscanf(sokoban,"%d\n",&stage);
 	fclose(sokoban);
-	load=1;
-	start=time(NULL);
+	time(&start);
 }
 int save(void)
 { //s키
-	end=time(NULL);
-	savetime=end-start;
+	time(&end);
+	savetime=savetime+end-start;
 	FILE *sokoban;
 	sokoban=fopen("sokoban.txt","w");
 	for(int i=0; i<30;i++)
@@ -407,18 +418,20 @@ int save(void)
 		{
 			fprintf(sokoban,"%c",p_map[i][j]);
 		}
-	fprintf(sokoban,"%f",savetime);
-	fprintf(sokoban,"%d",stage);
+	for(int k = 0; k <10; k++)
+		fprintf(sokoban,"%c", name[k]);
+	fprintf(sokoban,"\n");
+	for(int h = 0; h < 10; h++)
+		fprintf(sokoban,"%d\n", undo[0][h]);
+	fprintf(sokoban,"\n");
+	fprintf(sokoban,"%f\n",savetime);
+	fprintf(sokoban,"%d\n",stage);
 	fclose(sokoban);
-	start=time(NULL);
+	time(&start);
 }
 
 int timeprint(void){
-  if(load==1)
-  	m_time=savetime+(end-start);
-  else
-  	m_time= end-start;
-  alltime+=m_time;
+  m_time=savetime+(end-start);
   printf("클리어 시간: %f\n",m_time);
   }
 
@@ -686,9 +699,9 @@ int main(void)
         printname();
         showgame();
         get_key();
-				box_check();
-				mapclear();
+		box_check();
+		mapclear();
         gameclear();
-				system("clear");
+		system("clear");
         }
 }
