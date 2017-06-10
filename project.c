@@ -127,9 +127,9 @@ int showgame()
 {
 	for(int i =0; i < mapsize[stage]-1; i++){
 		for(int j = 0; j < 30; j++){
-			if(p_map == '%')
+			if(p_map[i][j] == '*')
 				printf("$");
-			else if (p_map == '*')
+			else if (p_map[i][j] == 'P')
 				printf("@");
 			else
 				printf("%c", p_map[i][j]);
@@ -395,6 +395,7 @@ int save(void)
 	fclose(sokoban);
 	start=clock();
 }
+
 int timeprint(void){
   if(load==1)
   	m_time=savetime+((end-start)/1000);
@@ -403,13 +404,15 @@ int timeprint(void){
   alltime+=m_time;
   printf("클리어 시간: %3f\n",m_time);
   }
+
 int mapclear(void)
 {
-	if(box==0)
-	{
-		end=clock();
-		timeprint();
-	}
+//	if(box==0)
+//	{
+//		end=clock();
+//		timeprint();
+//		stage++;
+//	}
 }
 
   //Jae-hyun**********************************************
@@ -624,6 +627,7 @@ int main(void)
         printname();
         showgame();
         get_key();
+		mapclear();
         gameclear();
         system("clear");
         }
