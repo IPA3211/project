@@ -50,12 +50,13 @@ char map[5][30][30];
 char p_map[30][30];
 int  mapsize[5];
 int player_x, player_y;//player's x,y
+int rank[5][4];
 
 
 int stage = 0;
 int box = 0;
 
-char name[10];
+char name[5][4][10];
 char undo[2][5] = {0,0,0,0,0,0,0,0,0,0};
 time_t start,end;
 float m_time,savetime=0;
@@ -247,10 +248,10 @@ int inputname(void)
 
 	printf("사용자 명을 입력하시오(최대10자): ");
 	for(nm =0; nm<10; nm++){
-		scanf("%c", &name[nm]); //입력받은 값을 name배열값에 지정.
-		if(name[nm] == '\n')
+		scanf("%c", &name[stage][3][nm]); //입력받은 값을 name배열값에 지정.
+		if(name[stage][3][nm] == '\n')
 		{
-			name[nm] = 0;
+			name[stage][3][nm] = 0;
 			break;
 		}
 	}
@@ -433,6 +434,7 @@ int save(void)
 int timeprint(void){
   m_time=savetime+(end-start);
   printf("클리어 시간: %f\n",m_time);
+  rank[stage][4] = m_time;
   }
 
 int mapclear(void)
@@ -447,22 +449,22 @@ int mapclear(void)
 }
 
 //jae-hyun
-/*int ranking(void)
+int ranking(void)
 {
 	FILE = *ranking;
 	ranking = fopen("ranking.txt","w");
 	if (box == 0)
 	{
-		int rank[10];
-		int rankcount = 10;
+		int rankcount = 5;
 		int hold = 0, loop, i;
-		int stageR = 0;
 		for (loop = 0; loop < rankcount - 1; loop++) {
 			for (i = 0; i < rankcount - 1 - loop; i++) {
-				if (rank[i] > rank[i + 1]) {
-					hold = rank[i];
-					rank[i] = rank[i + 1];
-					rank[i + 1] = hold;
+				if (rank[stage][i] > rank[stage][i + 1]) {
+					hold = rank[stage][i];
+					rank[stage][i] = rank[stage][i + 1];
+					for (j = 0; j <= 10; j++)
+						name[stage][i][j] = name[stage][i + 1][j];
+					rank[stage][i + 1] = hold;
 				}
 			}
 		}
@@ -470,10 +472,10 @@ int mapclear(void)
 		for (i = 0; i < rankcount; i++) {
 			printf("%d", rank[i]);
 		}
-		stageR++;
+		
 	}
 }
-*/
+
 int ctrl_key(char ch)
 {
     int a, b, c, d;
