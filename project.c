@@ -181,17 +181,30 @@ int get_key(void)
 {
 	static char a;
 	static char a_sav;
+  int c;
 
 	printf("(command) %c", a);
 
 	a = getch();
 
 	if((a == 'h')||(a == 'j')||(a == 'k')||(a == 'l')){
-		ctrl_key(a);
-    for(int i = 0; i <2; i++)
-      for(int j = 0; j <5; j++){
-
-      }
+		c = ctrl_key(a);
+    if(c == 1){
+      undo[0][0] = a;
+      undo[1][0] = 0;
+      for(int i = 0; i <2; i++)
+        for(int j = 0; j <5; j++){
+          undo[i][j+1] = undo[i][j];
+        }
+    }
+    if(c == 2){
+      undo[0][0] = a;
+      undo[1][0] = 1;
+      for(int i = 0; i <2; i++)
+        for(int j = 0; j <5; j++){
+          undo[i][j+1] = undo[i][j];
+        }
+    }
     a = 0;
 	}
 	else if(a == '\n')
@@ -249,22 +262,82 @@ int displayhelp(void){
 /* undo(u) */
 int undo_key(void)
 {
+  int player_x, player_y;//player's x,y
+
+  for(int i=0;i<30;i++)
+  {
+    for(int j=0;j<30;j++)
+    {
+      if ((p_map[i][j] == '@')||(p_map[i][j] == 'P')){
+        player_y = i, player_x = j;
+        break;
+      }
+    }
+  }
+
   if(undo[0][0] == 'h')
-			ctrl_key('l');
-		else if(undo[0][0] == 'j')
-			ctrl_key('k');
-		else if(undo[0][0] == 'k')
-			ctrl_key('j');
-		else if(undo[0][0] == 'l')
-			ctrl_key('h');
-		undo[0] = undo[1];
-		undo[1] = undo[2];
-		undo[2] = undo[3];
-		undo[3] = undo[4];
-		undo[4] = ' ';
+  {
+    if(undo[1][0] == 1)
+    {
+      ctrl_key('l');
+      p_map[player_y][player_x-1] = ' ';
+      p_map[player_y][player_x] = '@';
+    }
+    else
+      ctrl_key('l');
+  }
+  else if(undo[0][0] == 'j')
+  {
+    if(undo[1][0] == 1)
+    {
+      ctrl_key('k');
+      p_map[player_y+1][player_x] = ' ';
+      p_map[player_y][player_x] = '@';
+    }
+    else
+      ctrl_key('k');
+  }
+  else if(undo[0][0] == 'k')
+  {
+    if(undo[1][0] == 1)
+    {
+      ctrl_key('j');
+      p_map[player_y-1][player_x] = ' ';
+      p_map[player_y][player_x] = '@';
+    }
+    else
+      ctrl_key('j');
+  }
+  else if(undo[0][0] == 'l')
+  {
+    if(undo[1][0] == 1)
+    {
+      ctrl_key('h');
+      p_map[player_y][player_x+1] = ' ';
+      p_map[player_y][player_x] = '@';
+    }
+    else
+      ctrl_key('h');
+  }
+
+  for(int i = 1; i >=0; i--){
+		if(i == 0)
+			{
+				for(int j = 3; j >=0; j--)
+				{
+					undo[i][j] = undo[i][j+1];
+					undo[0][4] = 0;
+				}
+			}
+		else{
+      for(int j = 3; j >=0; j--){
+        undo[i][j] = undo[i][j+1];
+				undo[1][4] = ' ';
+			}
+		}
+	}
   return 0;
 }
-
 //Jae-woo
 int error(void){
 	int box=0, place=0;
@@ -340,8 +413,8 @@ int mapclear(void)
 }
 
   //Jae-hyun**********************************************
-  int ctrl_key(char ch)
-  {
+int ctrl_key(char ch)
+{
     int a, b, c, d;
 
     for(int i=0;i<30;i++)
@@ -377,121 +450,161 @@ int mapclear(void)
       if(p_map[b][a] == '@')//user on space*******************
       {
         if((p_map[b+d][a+c] == '#'))//wall  1
-        {   }
+        {
+          return 0;
+        }
         else if((p_map[b+d][a+c] == 'O'))//location  2
         {
           p_map[b+d][a+c] = 'P';
           p_map[b][a] = ' ';
+          return 1;
         }
 
         else if((p_map[b+d][a+c] == '$'))//package  3
         {
           if(p_map[b+(d*2)][a+(c*2)] == '#')//package facing wall
-          {   }
+          {
+            return 0;
+          }
           else if(p_map[b+(d*2)][a+(c*2)] == ' ')//package facing space
           {
             p_map[b+(d*2)][a+(c*2)] = '$';
             p_map[b+d][a+c] = '@';
             p_map[b][a] = ' ';
+            return 2;
           }
           else if(p_map[b+(d*2)][a+(c*2)] == 'O')//package facing location
           {
             p_map[b+(d*2)][a+(c*2)] = '*';
             p_map[b+d][a+c] = '@';
             p_map[b][a] = ' ';
+            return 2;
           }
           else if(p_map[b+(d*2)][a+(c*2)] == '*')//package facing other package on location
-          {   }
+          {
+            return 0;
+          }
           else if(p_map[b+d][a+c] == '$')//packaage facing other package
-          {   }
+          {
+            return 0;
+          }
         }
 
         else if((p_map[b+d][a+c] == ' '))//space  4
         {
           p_map[b+d][a+c] = '@';
           p_map[b][a] = ' ';
+          return 1;
         }
 
         else if((p_map[b+d][a+c] == '*'))//package on the location  5
         {
           if(p_map[b+(d*2)][a+(c*2)] == '#')//package on location facing wall
-          {   }
+          {
+            return 0;
+          }
           else if(p_map[b+(d*2)][a+(c*2)] == ' ')//package on location facing space
           {
             p_map[b+(d*2)][a+(c*2)] = '$';
             p_map[b+d][a+c] = 'P';
             p_map[b][a] = ' ';
+            return 2;
           }
           else if(p_map[b+(d*2)][a+(c*2)] == 'O')//package on location facing location
           {
             p_map[b+(d*2)][a+(c*2)] = '*';
             p_map[b+d][a+c] = 'P';
             p_map[b][a] = ' ';
+            return 2;
           }
           else if(p_map[b+(d*2)][a+(c*2)] == '*')//package on location facing other package on location
-          {   }
+          {
+            return 0;
+          }
           else if(p_map[b+d][a+c] == '$')//packaage on location facing other package
-          {   }
+          {
+            return 0;
+          }
         }
       }
       else if(p_map[b][a] == 'P')//user on the location******************
       {
         if((p_map[b+d][a+c] == '#'))//wall                1
-        {   }
+        {
+          return 0;
+        }
         else if((p_map[b+d][a+c] == '$'))//package        2
         {
           if(p_map[b+(d*2)][a+(c*2)] == '#')//package facing wall
-          {   }
+          {
+            return 0;
+          }
           else if(p_map[b+(d*2)][a+(c*2)] == ' ')//package facing space
           {
             p_map[b+(d*2)][a+(c*2)] = '$';
             p_map[b+d][a+c] = '@';
             p_map[b][a] = 'O';
+            return 2;
           }
           else if(p_map[b+(d*2)][a+(c*2)] == 'O')//package facing location
           {
             p_map[b+(d*2)][a+(c*2)] = '*';
             p_map[b+d][a+c] = 'P';
             p_map[b][a] = 'O';
+            return 2;
           }
           else if(p_map[b+(d*2)][a+(c*2)] == '*')//package facing other package on location
-          {   }
+          {
+            return 0;
+          }
           else if(p_map[b+d][a+c] == '$')//packaage facing other package
-          {   }
+          {
+            return 0;
+          }
         }
 
         else if((p_map[b+d][a+c] == '*'))//package on the location3
         {
           if(p_map[b+(d*2)][a+(c*2)] == '#')//package on location facing wall
-          {   }
+          {
+            return 0;
+          }
           else if(p_map[b+(d*2)][a+(c*2)] == ' ')//package on location facing space
           {
             p_map[b+(d*2)][a+(c*2)] = '$';
             p_map[b+d][a+c] = 'P';
             p_map[b][a] = 'O';
+            return 2;
           }
           else if(p_map[b+(d*2)][a+(c*2)] == 'O')//package on location facing location
           {
             p_map[b+(d*2)][a+(c*2)] = '*';
             p_map[b+d][a+c] = 'P';
             p_map[b][a] = 'O';
+            return 2;
           }
           else if(p_map[b+(d*2)][a+(c*2)] == '*')//package on location facing other package on location
-          {   }
+          {
+            return 0;
+          }
           else if(p_map[b+d][a+c] == '$')//packaage on location facing other package
-          {   }
+          {
+            return 0;
+          }
         }
 
         else if((p_map[b+d][a+c] == ' '))//space              4
         {
           p_map[b+d][a+c] = '@';
           p_map[b][a] = 'O';
+          return 1;
         }
         else if((p_map[b+d][a+c] == 'O'))//location          5
         {
           p_map[b+d][a+c] = 'P';
           p_map[b][a] = 'O';
-                }
+          return 1;
+        }
       }
       else if((p_map[b][a] != '@')||(p_map[b][a] != 'P'))
       printf("move error");
@@ -514,5 +627,4 @@ int main(void)
         gameclear();
         system("clear");
         }
-    }
 }
