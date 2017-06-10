@@ -54,11 +54,12 @@ int player_x, player_y;//player's x,y
 
 int stage = 0;
 int load=0;
+int box = 0;
 
 char name[10];
 char undo[2][5] = {0,0,0,0,0,0,0,0,0,0};
-clock_t start,end;
-double m_time,alltime=0,savetime;
+time_t start,end;
+float m_time,alltime=0,savetime;
 //common func
 int getch(void){
 	int ch;
@@ -131,9 +132,9 @@ int showgame()
 {
 	for(int i =0; i < mapsize[stage]-1; i++){
 		for(int j = 0; j < 30; j++){
-			if(p_map == '%')
+			if(p_map[i][j] == '*')
 				printf("$");
-			else if (p_map == '*')
+			else if (p_map[i][j] == 'P')
 				printf("@");
 			else
 				printf("%c", p_map[i][j]);
@@ -151,12 +152,14 @@ int command(char x){
 		case 'u':
 			if(undo[0][0] != 0)
       	undo_key();
-			break;
+				break;
 		case 'r':
+			playmap(stage);
 			break;
 		case 'n':
 			stage =0;
 			playmap(stage);
+			start=time(NULL);
 			break;
 		case 'e':
 			system("clear");
@@ -387,16 +390,16 @@ int fileload(void)
 	for(int i=0;i<30;i++)
 		for(int j=0;j<30;j++)
 			fscanf(sokoban,"%c",&p_map[i][j]);
-	fscanf(sokoban,"%3f",&savetime);
+	fscanf(sokoban,"%f",&savetime);
 	fscanf(sokoban,"%d",&stage);
 	fclose(sokoban);
 	load=1;
-	start=clock();
+	start=time(NULL);
 }
 int save(void)
 { //s키
-	end=clock();
-	savetime= (end-start)/1000;
+	end=time(NULL);
+	savetime=end-start;
 	FILE *sokoban;
 	sokoban=fopen("sokoban.txt","w");
 	for(int i=0; i<30;i++)
@@ -404,34 +407,73 @@ int save(void)
 		{
 			fprintf(sokoban,"%c",p_map[i][j]);
 		}
-	fprintf(sokoban,"%3f",savetime);
+	fprintf(sokoban,"%f",savetime);
 	fprintf(sokoban,"%d",stage);
 	fclose(sokoban);
-	start=clock();
+	start=time(NULL);
 }
+
 int timeprint(void){
   if(load==1)
-  	m_time=savetime+((end-start)/1000);
+  	m_time=savetime+(end-start);
   else
-  	m_time= (end-start)/1000;
+  	m_time= end-start;
   alltime+=m_time;
-  printf("클리어 시간: %3f\n",m_time);
+  printf("클리어 시간: %f\n",m_time);
   }
-//Jae-hyun**********************************************
+
+int mapclear(void)
+{
+	if(box==0)
+	{
+		time(&end);
+		timeprint();
+		stage++;
+		playmap(stage);
+	}
+}
+
+//jae-hyun
+/*int ranking(void)
+{
+	FILE = *ranking;
+	ranking = fopen("ranking.txt","w");
+	if (box == 0)
+	{
+		int rank[10];
+		int rankcount = 10;
+		int hold = 0, loop, i;
+		int stageR = 0;
+		for (loop = 0; loop < rankcount - 1; loop++) {
+			for (i = 0; i < rankcount - 1 - loop; i++) {
+				if (rank[i] > rank[i + 1]) {
+					hold = rank[i];
+					rank[i] = rank[i + 1];
+					rank[i + 1] = hold;
+				}
+			}
+		}
+
+		for (i = 0; i < rankcount; i++) {
+			printf("%d", rank[i]);
+		}
+		stageR++;
+	}
+}
+*/
 int ctrl_key(char ch)
 {
     int a, b, c, d;
-
     for(int i=0;i<30;i++)
     {
       for(int j=0;j<30;j++)
       {
-        if ((p_map[i][j] == '@')||(p_map[i][j] == 'P')){
-          b = i, a = j;
-          break;
-        }
+		  if ((p_map[i][j] == '@') || (p_map[i][j] == 'P')) {
+			  b = i, a = j;
+		  }
       }
-     }
+    }
+
 
       switch (ch) {
         case 'l':
@@ -615,8 +657,22 @@ int ctrl_key(char ch)
       printf("move error");
       else
       printf("error");
-    }
+}
 
+int box_check(void)
+{
+	box = 0;
+    for(int i=0;i<30;i++)
+    {
+      for(int j=0;j<30;j++)
+      {
+		  if (p_map[i][j] == '$')
+			  box++;
+      }
+    }
+}
+
+//main
 int main(void)
 {
 	system("clear");
@@ -625,10 +681,13 @@ int main(void)
     playmap(stage);
 	inputname();
     system("clear");
+	time(&start);
     while(1){
         printname();
         showgame();
         get_key();
+				box_check();
+				mapclear();
         gameclear();
 				system("clear");
         }
