@@ -56,10 +56,11 @@ int rank[5][4];
 int stage = 0;
 int box = 0;
 
-char name[5][4][10];
+char name[10];
+char name_r[5][4][10];
 char undo[2][5] = {0,0,0,0,0,0,0,0,0,0};
 time_t start,end;
-float m_time,savetime=0;
+float m_time, savetime=0;
 //common func
 int getch(void){
 	int ch;
@@ -248,10 +249,10 @@ int inputname(void)
 
 	printf("사용자 명을 입력하시오(최대10자): ");
 	for(nm =0; nm<10; nm++){
-		scanf("%c", &name[stage][3][nm]); //입력받은 값을 name배열값에 지정.
-		if(name[stage][3][nm] == '\n')
+		scanf("%c", &name[nm]); //입력받은 값을 name배열값에 지정.
+		if(name[nm] == '\n')
 		{
-			name[stage][3][nm] = 0;
+			name[nm] = 0;
 			break;
 		}
 	}
@@ -403,15 +404,15 @@ int fileload(void)
 		fscanf(sokoban,"%c", &name[k]);
 	for(int h = 0; h < 10; h++)
 		fscanf(sokoban,"%d", &undo[0][h]);
-	fscanf(sokoban,"%f\n",&savetime);
-	fscanf(sokoban,"%d\n",&stage);
+	fscanf(sokoban,"%f",&savetime);
+	fscanf(sokoban,"%d",&stage);
 	fclose(sokoban);
 	time(&start);
 }
 int save(void)
 { //s키
 	time(&end);
-	savetime=savetime+end-start;
+	savetime+=end-start;
 	FILE *sokoban;
 	sokoban=fopen("sokoban.txt","w");
 	for(int i=0; i<30;i++)
@@ -424,7 +425,6 @@ int save(void)
 	fprintf(sokoban,"\n");
 	for(int h = 0; h < 10; h++)
 		fprintf(sokoban,"%d\n", undo[0][h]);
-	fprintf(sokoban,"\n");
 	fprintf(sokoban,"%f\n",savetime);
 	fprintf(sokoban,"%d\n",stage);
 	fclose(sokoban);
@@ -445,25 +445,29 @@ int mapclear(void)
 		timeprint();
 		stage++;
 		playmap(stage);
+		for (int i =0 ; i < 10; i++)
+		{
+			undo[0][i] = 0;
+		}
 	}
 }
 
 //jae-hyun
 int ranking(void)
 {
-	FILE = *ranking;
+	FILE *ranking;
 	ranking = fopen("ranking.txt","w");
 	if (box == 0)
 	{
 		int rankcount = 5;
 		int hold = 0, loop, i;
 		for (loop = 0; loop < rankcount - 1; loop++) {
-			for (i = 0; i < rankcount - 1 - loop; i++) {
+			for (int i = 0; i < rankcount - 1 - loop; i++) {
 				if (rank[stage][i] > rank[stage][i + 1]) {
 					hold = rank[stage][i];
 					rank[stage][i] = rank[stage][i + 1];
-					for (j = 0; j <= 10; j++)
-						name[stage][i][j] = name[stage][i + 1][j];
+					for (int j = 0; j <= 10; j++)
+						name_r[stage][i][j] = name_r[stage][i + 1][j];
 					rank[stage][i + 1] = hold;
 				}
 			}
