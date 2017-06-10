@@ -50,6 +50,7 @@ int  mapsize[5];
 
 int stage = 0;
 int load=0;
+int box = 0;
 
 char name[10];
 char undo[5][2];
@@ -416,14 +417,15 @@ int mapclear(void)
 int ctrl_key(char ch)
 {
     int a, b, c, d;
-
+	box = 0;
     for(int i=0;i<30;i++)
     {
       for(int j=0;j<30;j++)
       {
-        if ((p_map[i][j] == '@')||(p_map[i][j] == 'P')){
-          b = i, a = j;
-          break;
+		  if ((p_map[i][j] == '@') || (p_map[i][j] == 'P')) {
+			  b = i, a = j;
+		  else if (p_map[i][j] == '$')
+			  box++;
         }
       }
      }
