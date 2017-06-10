@@ -42,17 +42,21 @@
 #include <time.h>
 /* FOR ERROR FIX */
 int ctrl_key(char ch);
+int player_xy(void);
+
 //common var
 
 char map[5][30][30];
 char p_map[30][30];
 int  mapsize[5];
+int player_x, player_y;//player's x,y
+
 
 int stage = 0;
 int load=0;
 
 char name[10];
-char undo[5][2];
+char undo[2][5] = {0,0,0,0,0,0,0,0,0,0};
 clock_t start,end;
 double m_time,alltime=0,savetime;
 //common func
@@ -145,7 +149,8 @@ int command(char x){
 			displayhelp();
 			break;
 		case 'u':
-      undo_key();
+			if(undo[0][0] != 0)
+      	undo_key();
 			break;
 		case 'r':
 			break;
@@ -190,20 +195,22 @@ int get_key(void)
 	if((a == 'h')||(a == 'j')||(a == 'k')||(a == 'l')){
 		c = ctrl_key(a);
     if(c == 1){
-      undo[0][0] = a;
-      undo[1][0] = 0;
-      for(int i = 0; i <2; i++)
-        for(int j = 0; j <5; j++){
+      for(int i = 0; i <2; i++){
+        for(int j = 3; j>=0; j--){
           undo[i][j+1] = undo[i][j];
         }
-    }
+			}
+		undo[0][0] = a;
+	  undo[1][0] = 0;
+		}
     if(c == 2){
-      undo[0][0] = a;
-      undo[1][0] = 1;
-      for(int i = 0; i <2; i++)
-        for(int j = 0; j <5; j++){
+      for(int i = 0; i <2; i++){
+        for(int j = 3; j>=0; j--){
           undo[i][j+1] = undo[i][j];
         }
+			}
+		undo[0][0] = a;
+		undo[1][0] = 1;
     }
     a = 0;
 	}
@@ -259,84 +266,91 @@ int displayhelp(void){
 		displayhelp();
 }
 
-/* undo(u) */
-int undo_key(void)
+int player_xy(void)
 {
-  int player_x, player_y;//player's x,y
-
-  for(int i=0;i<30;i++)
-  {
-    for(int j=0;j<30;j++)
-    {
-      if ((p_map[i][j] == '@')||(p_map[i][j] == 'P')){
-        player_y = i, player_x = j;
-        break;
-      }
-    }
-  }
-
-  if(undo[0][0] == 'h')
-  {
-    if(undo[1][0] == 1)
-    {
-      ctrl_key('l');
-      p_map[player_y][player_x-1] = ' ';
-      p_map[player_y][player_x] = '@';
-    }
-    else
-      ctrl_key('l');
-  }
-  else if(undo[0][0] == 'j')
-  {
-    if(undo[1][0] == 1)
-    {
-      ctrl_key('k');
-      p_map[player_y+1][player_x] = ' ';
-      p_map[player_y][player_x] = '@';
-    }
-    else
-      ctrl_key('k');
-  }
-  else if(undo[0][0] == 'k')
-  {
-    if(undo[1][0] == 1)
-    {
-      ctrl_key('j');
-      p_map[player_y-1][player_x] = ' ';
-      p_map[player_y][player_x] = '@';
-    }
-    else
-      ctrl_key('j');
-  }
-  else if(undo[0][0] == 'l')
-  {
-    if(undo[1][0] == 1)
-    {
-      ctrl_key('h');
-      p_map[player_y][player_x+1] = ' ';
-      p_map[player_y][player_x] = '@';
-    }
-    else
-      ctrl_key('h');
-  }
-
-  for(int i = 1; i >=0; i--){
-		if(i == 0)
-			{
-				for(int j = 3; j >=0; j--)
-				{
-					undo[i][j] = undo[i][j+1];
-					undo[0][4] = 0;
-				}
-			}
-		else{
-      for(int j = 3; j >=0; j--){
-        undo[i][j] = undo[i][j+1];
-				undo[1][4] = ' ';
+	for(int i=0;i<30;i++)
+	{
+		for(int j=0;j<30;j++)
+		{
+			if ((p_map[i][j] == '@')||(p_map[i][j] == 'P')){
+				player_y = i, player_x = j;
+				break;
 			}
 		}
 	}
-  return 0;
+	return 0;
+}
+
+/* undo(u) */
+int undo_key(void)
+{
+	player_xy();
+	int box_x, box_y;
+  char reverse;
+
+	switch (undo[0][0]) {
+		case 'l':
+			box_x = 1;
+			box_y = 0;
+			reverse = 'h';
+			break;
+		case 'k':
+			box_x = 0;
+			box_y = 1;
+			reverse = 'j';
+			break;
+		case 'j':
+			box_x = 0;
+			box_y = -1;
+			reverse = 'k';
+			break;
+		case 'h':
+			box_x = -1;
+			box_y = 0;
+			reverse = 'l';
+			break;
+		default:
+			break;
+	}
+
+    if(undo[1][0] == 1)
+    {
+      ctrl_key(reverse);
+			if((p_map[player_y+box_y][player_x+box_x] == '*')&&(p_map[player_y][player_x] == ' ')){
+				p_map[player_y+box_y][player_x+box_x] = 'O';
+				p_map[player_y][player_x] = '$';
+			}
+			else if((p_map[player_y+box_y][player_x+box_x] == '*')&&(p_map[player_y][player_x] == 'O')) {
+      	p_map[player_y+box_y][player_x+box_x] = 'O';
+      	p_map[player_y][player_x] = '*';
+			}
+			else if((p_map[player_y+box_y][player_x+box_x] == '$')&&(p_map[player_y][player_x] == ' ')) {
+      	p_map[player_y+box_y][player_x+box_x] = ' ';
+      	p_map[player_y][player_x] = '$';
+			}
+			else if((p_map[player_y+box_y][player_x+box_x] == '$')&&(p_map[player_y][player_x] == 'O')) {
+      	p_map[player_y+box_y][player_x+box_x] = ' ';
+      	p_map[player_y][player_x] = ' ';
+			}
+    }
+    else if (undo[1][0] == 0)
+      ctrl_key(reverse);
+		else
+		{}
+  for(int i = 1; i >=0; i--){
+		if(i == 0){
+			for(int j = 0; j <5; j++){
+			undo[i][j] = undo[i][j+1];
+			}
+			undo[0][4] = 0;
+		}
+		else{
+      for(int j = 0; j < 5; j++){
+        undo[i][j] = undo[i][j+1];
+			}
+			undo[1][4] = 0;
+		}
+	}
 }
 //Jae-woo
 int error(void){
@@ -403,16 +417,7 @@ int timeprint(void){
   alltime+=m_time;
   printf("클리어 시간: %3f\n",m_time);
   }
-int mapclear(void)
-{
-	if(box==0)
-	{
-		end=clock();
-		timeprint();
-	}
-}
-
-  //Jae-hyun**********************************************
+//Jae-hyun**********************************************
 int ctrl_key(char ch)
 {
     int a, b, c, d;
@@ -625,6 +630,6 @@ int main(void)
         showgame();
         get_key();
         gameclear();
-        system("clear");
+				system("clear");
         }
 }
