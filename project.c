@@ -419,7 +419,34 @@ int mapclear(void)
 	}
 }
 
-  //Jae-hyun**********************************************
+//Jae-hyun*******************************************
+int ranking(void)
+{
+	FILE = *ranking;
+	ranking = fopen("ranking.txt","w");
+	if (box == 0)
+	{
+		int rank[10]
+		int rankcount = 10;
+		int hold = 0, loop, i;
+		int stageR = 0;
+		for (loop = 0; loop < rankcount - 1; loop++) {
+			for (i = 0; i < rankcount - 1 - loop; i++) {
+				if (rank[i] > rank[i + 1]) {
+					hold = rank[i];
+					rank[i] = rank[i + 1];
+					rank[i + 1] = hold;
+				}
+			}
+		}
+
+		for (i = 0; i < rankcount; i++) {
+			printf("%d", rank[i]);
+		}
+		stageR++;
+	}
+}
+
 int ctrl_key(char ch)
 {
     int a, b, c, d;
