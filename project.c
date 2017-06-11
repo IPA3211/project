@@ -534,6 +534,26 @@ int mapclear(void)
 //Jae-hyun*********************************
 int ranking(void)
 {
+	int i, j, tmp, n;
+	n = sizeof(rank) / sizeof(int);
+	for (i = 0; i < n - 1; i++)
+	{
+		for (j = 0; j < n - 1; j++)
+		{
+			if (rank[stage][j] > rank[stage][j + 1])
+			{
+				tmp = rank[stage][j]
+				rank[stage][j] = rank[stage][j + 1];
+				for (int g = 0; g <= 9; g++)
+				{
+					name_r[stage][j][g] = name_r[stage][j+1][g]
+				}
+				
+				rank[stage][j] = tmp;
+			}
+		}
+	}
+
 	char c = 0;
 	FILE* ranking;
 	ranking = fopen("ranking.txt", "r");
@@ -554,23 +574,7 @@ int ranking(void)
 
 	if (box == 0)
 	{
-		int rankcount = 5;
-		int hold = 0, loop;
-		int hold_n;
-		for (loop = 0; loop < rankcount - 1; loop++) {
-			for (int i = 0; i < rankcount - 1 - loop; i++) {
-				if (rank[stage][i] > rank[stage][i + 1]) {
-					hold = rank[stage][i];
-					rank[stage][i] = rank[stage][i + 1];
-					for (int j = 0; j < 10; j++){
-						hold_n = name_r[i][j];
-						name_r[stage][i][j] = name_r[stage][i + 1][j];
-						name_r[stage][i+1][j] = hold_n;
-					}
-					rank[stage][i + 1] = hold;
-				}
-			}
-		}
+		
 		ranking = fopen("ranking.txt","w");
 		int ranknum = 1;
 		for(int j=0; j<20; j++){
