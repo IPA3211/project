@@ -21,14 +21,14 @@
   7. h,j,k,l move: clear(on main)
   8. undo: cheol-soon
   9. new: clear(on main)
-  10. exit: jae-woo
-  11. replay: jae-hyun
+  10. exit: clear(on main)
+  11. replay: clear(on main)
   12. file load: clear(on main)
   13. save: clear(on main)
   14. help: clear(on main)
   15. top: cheol-soon
   16. each map top: cheol-soon
-  17. time: jae-woo
+  17. time: clear(on main)
  *********************/
 
 /* FOR WINDOWS */
@@ -52,10 +52,12 @@ int  mapsize[5];
 int player_x, player_y;//player's x,y
 int rank[5][4];
 
+int num_top[3];
 
 int stage = 0;
 int box = 0;
 
+int rank_map[5][5][3];
 char name[10];
 char name_r[5][4][10];
 char undo[2][5] = {0,0,0,0,0,0,0,0,0,0};
@@ -84,7 +86,7 @@ int getch(void){
 }
 
 //Seung-mo
-int readmap(void){
+int readmap(void){ //read original map from map.txt
 
 	FILE  *mapf;
 	char a;
@@ -95,23 +97,23 @@ int readmap(void){
 	for(int x = 0; x <5 ; x++)
 		for(int y = 0; y< 30; y++)
 			for(int z = 0; z < 30; z++)
-				map[x][y][z] = ' ';
+				map[x][y][z] = ' '; //initialize all map arrays
 
 	while (fscanf(mapf, "%c", &a) != EOF)
 	{
 		if((a == ' ')||(a == '#')||(a == '$')||(a =='O')||(a =='@')){
 			map[b][i][j] = a;
-			j++;
+			j++; //move to next horizontal block
 		}
 		else if(a =='\n'){
-			i++;
-			j = 0;
+			i++; //move to next vertical block
+			j = 0; //initialize horizontal block
 		}
 		else if (a == 'm'||a =='e'){
 			mapsize[b] = ++i;
-			b++;
-			i =-1;
-			j =0;
+			b++; //move to next stage block
+			i =-1; //initialize horizontal block - 1
+			j =0; //initialize vertical block
 		}
 		else{}
 	}
@@ -124,7 +126,7 @@ int playmap(int a)
 {
 	for(int i =0; i < 30; i++)
 		for(int j = 0; j < 30; j++)
-			p_map[i][j] = map[a][i][j];
+			p_map[i][j] = map[a][i][j]; //depending on the stage value, copy source map to p_map
 
 	return 0;
 }
@@ -133,19 +135,19 @@ int showgame()
 {
 	for(int i =0; i < mapsize[stage]-1; i++){
 		for(int j = 0; j < 30; j++){
-			if(p_map[i][j] == '*')
-				printf("$");
-			else if (p_map[i][j] == 'P')
-				printf("@");
+			if(p_map[i][j] == '*') //O + $ = $
+				printf("$"); // display * as $
+			else if (p_map[i][j] == 'P') //O + @ = P
+				printf("@"); // display P as @
 			else
-				printf("%c", p_map[i][j]);
+				printf("%c", p_map[i][j]); //display
 		}
 		printf("\n");
 	}
 	return 0;
 }
 int command(char x){
-	switch (x)
+	switch (x) //processing input value
 	{
 		case 'd':
 			displayhelp();
@@ -195,64 +197,135 @@ int command(char x){
 	}
 }
 
-int get_key(void)
+int get_key(void) //input values
 {
-	static char a;
-	static char a_sav;
-  int c;
-
-	printf("(command) %c", a);
-
-	a = getch();
-
-	if((a == 'h')||(a == 'j')||(a == 'k')||(a == 'l')){
-		c = ctrl_key(a);
-    if(c == 1){
-      for(int i = 0; i <2; i++){
-        for(int j = 3; j>=0; j--){
-          undo[i][j+1] = undo[i][j];
-        }
-			}
-		undo[0][0] = a;
-	  undo[1][0] = 0;
+	static char a, a_sav;;
+	static int pin;
+  	int c;
+	if(num_top[0] == 't') //t can get 3 
+	{	
+		char w;
+		printf("(command) %c%c%c", num_top[0], num_top[1], num_top[2]);//t can get 3 letters
+		w = getch();
+		if(w == '\b'||w == 127){
+			num_top[pin-1] = 0;
+			pin--;
 		}
-    if(c == 2){
-      for(int i = 0; i <2; i++){
-        for(int j = 3; j>=0; j--){
-          undo[i][j+1] = undo[i][j];
-        }
+		else if (w == '\n')
+		{
+			if(('0'<num_top[2])&&('9'>=num_top[2]))
+				top_output(num_top[2] - '0');
+			else
+				top_output(127);
+
+			num_top[0] = 0;
+			num_top[1] = 0;
+			num_top[2] = 0;
+
+		}
+		else{
+			num_top[pin] = w;
+			pin++;
+		}
+		if(pin == 4)
+			pin = 3;
+	}
+	else{
+		printf("(command) %c", a);
+		a = getch();
+	}
+	if((a == 'h')||(a == 'j')||(a == 'k')||(a == 'l')){ // move key
+		c = ctrl_key(a);
+    	if(c == 1){
+      		for(int i = 0; i <2; i++){
+        		for(int j = 3; j>=0; j--){
+          			undo[i][j+1] = undo[i][j];
+       			 }
 			}
-		undo[0][0] = a;
-		undo[1][0] = 1;
-    }
-    a = 0;
+			undo[0][0] = a;
+	  		undo[1][0] = 0;
+		}
+    	if(c == 2){
+      		for(int i = 0; i <2; i++){
+        		for(int j = 3; j>=0; j--){
+          			undo[i][j+1] = undo[i][j];
+       			}
+			}
+			undo[0][0] = a;
+			undo[1][0] = 1;
+    	}
+    	a = 0;
 	}
 	else if(a == '\n')
 		command(a_sav);
-	else;
+
+	else if(a == 't'){
+		num_top[0] = 't';
+		pin = 1;
+		a = 0;
+	}
 	a_sav = a;
 }
-
-int printname(void){
+int printname(void){ // print name
 
 	printf("\tHello ");
 	for(int i = 0; i < 10; i++)
 		printf("%c", name[i]);
 	printf("\n");
 }
+int re_inputname(void){ // run when the name is entered incorrectly
+
+	int nm=0;
+	
+	for (int j = 0; j <10; j++)
+	{
+		name[j] = 0;
+	}
+	system("clear");
+
+	printf("다시 사용자 명을 입력하시오(영어로 최대10자): ");
+	for(nm =0; nm<10; nm++){
+		name[nm] = getchar(); //입력받은 값을 name배열값에 지정.
+		if(name[nm] == '\n')
+		{
+			name[nm] = 0;
+			for(int i = 0; i<nm; i++){
+				if(!(((name[i] >= 'a')&&(name[i] <= 'z'))||((name[i] >= 'A')&&(name[i] <= 'Z')))){
+					re_inputname();
+				}
+				else
+					break;
+			}
+			break;
+		}
+	}
+	return 0;
+}
+
+int top_output(int a)
+{
+	printf("%d", a);
+}
 
 
 //Cheol-soon
 int inputname(void)
 {
-	int nm;
+	int nm=0;
 
-	printf("사용자 명을 입력하시오(최대10자): ");
+	printf("사용자 명을 입력하시오(영어로 최대10자): ");
 	for(nm =0; nm<10; nm++){
-		scanf("%c", &name[nm]); //입력받은 값을 name배열값에 지정.
+		name[nm] = getchar(); //입력받은 값을 name배열값에 지정.
 		if(name[nm] == '\n')
 		{
 			name[nm] = 0;
+			for(int i = 0; i<nm; i++){
+				if(!(((name[i] >= 'a')&&(name[i] <= 'z'))||((name[i] >= 'A')&&(name[i] <= 'Z')))){
+					re_inputname();
+				}
+				else
+					break;
+			}
 			break;
 		}
 	}
@@ -263,8 +336,6 @@ int inputname(void)
 int displayhelp(void){
 	//만약 d키가 눌렸을 때 아래의 내용들이 보여짐.//
 	system("clear");
-	printf("-------------------조작법------------------\n");
-	printf("-h(왼쪽), j(아래), k(위), l(오른쪽) : 창고지기 조정\n");
 	printf("-u(undo) : 이전에 있던 위치로 돌아가기 (최대 5번 할 수 있음.)\n");
 	printf("-r(replay) : 현재 맵을 처음부터 다시 시작(게임시간은 계속 유지.)\n");
 	printf("-n(new) : 첫 번째 맵부터 다시 시작(현재까지의 시간 기록 삭제.)\n");
@@ -309,12 +380,12 @@ int undo_key(void)
 			break;
 		case 'k':
 			box_x = 0;
-			box_y = 1;
+			box_y = -1;
 			reverse = 'j';
 			break;
 		case 'j':
 			box_x = 0;
-			box_y = -1;
+			box_y = 1;
 			reverse = 'k';
 			break;
 		case 'h':
@@ -444,6 +515,8 @@ int mapclear(void)
 		time(&end);
 		timeprint();
 		stage++;
+		time(&start);
+		savetime = 0.0;
 		playmap(stage);
 		for (int i =0 ; i < 10; i++)
 		{
@@ -501,11 +574,11 @@ int ctrl_key(char ch)
           break;
         case 'k':
           c = 0;
-          d = 1;
+          d = -1;
           break;
         case 'j':
           c = 0;
-          d = -1;
+          d = 1;
           break;
         case 'h':
           c = -1;
