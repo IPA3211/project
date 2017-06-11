@@ -57,7 +57,6 @@ int num_top[3];
 int stage = 0;
 int box = 0;
 
-int rank_map[5][5][3];
 char name[10];
 char name_r[5][4][10];
 char undo[2][5] = {0,0,0,0,0,0,0,0,0,0};
@@ -535,10 +534,20 @@ int ranking(void)
 	char c = 0;
 	FILE* ranking;
 	ranking = fopen("ranking.txt", "r");
-	while (c != EOF)
-	{
+	
 		
-	}
+	for(int j=0; j<20; j++){
+		fscanf(ranking,"%f", &rank[0][j]);
+	}		
+	for(int i = 0; i < 5; i++)
+		for(int j = 0; j < 4; j++)	
+			for(int nm =0; nm<10; nm++){
+				name_r[i][j][nm] = fgetc(ranking); //입력받은 값을 name배열값에 지정.
+				if(name_r[i][j][nm] == '\n')
+				{
+					break;
+				}
+			}
 
 	if (box == 0)
 	{
@@ -549,7 +558,7 @@ int ranking(void)
 				if (rank[stage][i] > rank[stage][i + 1]) {
 					hold = rank[stage][i];
 					rank[stage][i] = rank[stage][i + 1];
-					for (int j = 0; j <= 10; j++)
+					for (int j = 0; j < 10; j++)
 						name_r[stage][i][j] = name_r[stage][i + 1][j];
 					rank[stage][i + 1] = hold;
 				}
@@ -557,17 +566,18 @@ int ranking(void)
 		}
 		ranking = fopen("ranking.txt","w");
 		int ranknum = 1;
-		for(int j=0; j<3; j++){
-			fprintf(ranking,"%f",rank[stage][j]);
+		for(int j=0; j<20; j++){
+			fprintf(ranking,"%f",rank[0][j]);
 			fprintf(ranking,"\n");
 		}		
-		FILE* name;
-		name = fopen("name.txt", "w");
-		for(int i = 0; i <= 2; i++)
+		for(int i = 0; i < 20; i++)
 		{
-			for (int j = 0; j <= 0; j++) {
-				fprintf(name, "%c", name_r[stage][i][j]);
-				fprintf(name, "\n", name_r[stage][i][j]);
+			for (int j = 0; j < 10; j++) {
+				if(name_r[stage][i][j] == '\n'){
+					fprintf(ranking,"\n");
+					break;
+				}
+				fprintf(ranking, "%c", name_r[stage][i][j]);
 			}
 		}
 	}
