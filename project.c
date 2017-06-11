@@ -32,10 +32,10 @@
  *********************/
 
 /* FOR WINDOWS */
-//#include <termio.h>
+#include <termio.h>
 
 /* FOR MAC OS X */
-#include <termios.h>
+//#include <termios.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -329,6 +329,9 @@ int inputname(void)
 			break;
 		}
 	}
+	for(int i=0; i<=10;i++)
+	name_r[stage][3][i] = name[i];
+
 	return 0;
 }
 
@@ -518,6 +521,7 @@ int mapclear(void)
 		time(&start);
 		savetime = 0.0;
 		playmap(stage);
+		ranking();
 		for (int i =0 ; i < 10; i++)
 		{
 			undo[0][i] = 0;
@@ -525,15 +529,22 @@ int mapclear(void)
 	}
 }
 
-//jae-hyun
+//Jae-hyun*********************************
 int ranking(void)
 {
-	FILE *ranking;
-	ranking = fopen("ranking.txt","w");
+	char c = 0;
+	FILE* ranking;
+	ranking = fopen("ranking.txt", "r");
+	while (c != EOF)
+	{
+		c = fgetc(ranking);
+		putchar(c);
+	}
+
 	if (box == 0)
 	{
 		int rankcount = 5;
-		int hold = 0, loop, i;
+		int hold = 0, loop;
 		for (loop = 0; loop < rankcount - 1; loop++) {
 			for (int i = 0; i < rankcount - 1 - loop; i++) {
 				if (rank[stage][i] > rank[stage][i + 1]) {
@@ -545,12 +556,18 @@ int ranking(void)
 				}
 			}
 		}
-
-		for (i = 0; i < rankcount; i++) {
-			printf("%d", rank[i]);
+		ranking = fopen("ranking.txt","w");
+		int ranknum = 1;
+		for(int j=0; j<3; j++){
+			fprintf(ranking,"%f",rank[stage][j]);
+			fprintf(ranking,"\n");
+		}		
+		FILE* name
+		name = fopen("name.txt", "w");
+		for(int i = 0; i <= 9; i++)
+		{
+			fprintf(name, "%c",name[stage][])
 		}
-		
-	}
 }
 
 int ctrl_key(char ch)
