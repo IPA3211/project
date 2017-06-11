@@ -491,10 +491,12 @@ int ranking(void)
 		}		
 		FILE* name
 		name = fopen("name.txt", "w");
-		for(int i = 0; i <= 9; i++)
+		for(int i = 0; i <= 2; i++)
 		{
-			fprintf(name, "%c", name_r[stage][][j]);
-			fprintf(name, "%c", name_r[stage][][j])
+			for (int j = 0; j <= 0; j++) {
+				fprintf(name, "%c", name_r[stage][i][j]);
+				fprintf(name, "\n", name_r[stage][i][j])
+			}
 		}
 }
 
