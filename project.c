@@ -61,7 +61,7 @@ char name[10];
 char name_r[5][4][10];
 char undo[2][5] = {0,0,0,0,0,0,0,0,0,0};
 time_t start,end;
-float m_time, savetime=0;
+int m_time, savetime=0;
 //common func
 int getch(void){
 	int ch;
@@ -507,9 +507,11 @@ int save(void)
 int timeprint(void){
   m_time=savetime+(end-start);
   rank[stage][4] = m_time;
+  printf("%d", rank[stage][4]);
   for (int i = 0; i <10; i++)
   {
   	name_r[stage][4][i] = name[i];
+	printf("%c",name_r[stage][4][i]);
   }
 }
 
@@ -519,11 +521,11 @@ int mapclear(void)
 	{
 		time(&end);
 		timeprint();
+		ranking();
 		stage++;
 		time(&start);
 		savetime = 0.0;
 		playmap(stage);
-		ranking();
 		for (int i =0 ; i < 10; i++)
 		{
 			undo[0][i] = 0;
@@ -542,11 +544,11 @@ int ranking(void)
 		{
 			if (rank[stage][j] > rank[stage][j + 1])
 			{
-				tmp = rank[stage][j]
+				tmp = rank[stage][j];
 				rank[stage][j] = rank[stage][j + 1];
 				for (int g = 0; g <= 9; g++)
 				{
-					name_r[stage][j][g] = name_r[stage][j+1][g]
+					name_r[stage][j][g] = name_r[stage][j+1][g];
 				}
 				
 				rank[stage][j] = tmp;
