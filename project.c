@@ -506,9 +506,12 @@ int save(void)
 
 int timeprint(void){
   m_time=savetime+(end-start);
-  printf("클리어 시간: %f\n",m_time);
   rank[stage][4] = m_time;
+  for (int i = 0; i <10; i++)
+  {
+  	name_r[stage][4][i] = name[i];
   }
+}
 
 int mapclear(void)
 {
@@ -553,13 +556,17 @@ int ranking(void)
 	{
 		int rankcount = 5;
 		int hold = 0, loop;
+		int hold_n;
 		for (loop = 0; loop < rankcount - 1; loop++) {
 			for (int i = 0; i < rankcount - 1 - loop; i++) {
 				if (rank[stage][i] > rank[stage][i + 1]) {
 					hold = rank[stage][i];
 					rank[stage][i] = rank[stage][i + 1];
-					for (int j = 0; j < 10; j++)
+					for (int j = 0; j < 10; j++){
+						hold_n = name_r[i][j];
 						name_r[stage][i][j] = name_r[stage][i + 1][j];
+						name_r[stage][i+1][j] = hold_n;
+					}
 					rank[stage][i + 1] = hold;
 				}
 			}
@@ -573,11 +580,11 @@ int ranking(void)
 		for(int i = 0; i < 20; i++)
 		{
 			for (int j = 0; j < 10; j++) {
-				if(name_r[stage][i][j] == '\n'){
+				if(name_r[0][i][j] == '\n'){
 					fprintf(ranking,"\n");
 					break;
 				}
-				fprintf(ranking, "%c", name_r[stage][i][j]);
+				fprintf(ranking, "%c", name_r[0][i][j]);
 			}
 		}
 	}
