@@ -540,12 +540,14 @@ int ranking(void)
 	
 		
 	for(int j=0; j<20; j++){
-		fscanf(ranking,"%f", &rank[0][j]);
+		fscanf(ranking,"%d", &rank[0][j]);
+		printf("\n%d", rank[0][j]);
 	}		
 	for(int i = 0; i < 5; i++)
 		for(int j = 0; j < 4; j++)	
 			for(int nm =0; nm<10; nm++){
 				name_r[i][j][nm] = fgetc(ranking); //입력받은 값을 name배열값에 지정.
+				printf("\n%d", name_r[i][j][nm]);
 				if(name_r[i][j][nm] == '\n')
 				{
 					break;
@@ -574,9 +576,10 @@ int ranking(void)
 		ranking = fopen("ranking.txt","w");
 		int ranknum = 1;
 		for(int j=0; j<20; j++){
-			fprintf(ranking,"%f",rank[0][j]);
-			fprintf(ranking,"\n");
-		}		
+			fprintf(ranking,"%d",rank[0][j]);
+			if(j< 19)
+				fprintf(ranking,"\n");
+		}
 		for(int i = 0; i < 20; i++)
 		{
 			for (int j = 0; j < 10; j++) {
