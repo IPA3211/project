@@ -32,10 +32,10 @@
  *********************/
 
 /* FOR WINDOWS */
-#include <termio.h>
+//#include <termio.h>
 
 /* FOR MAC OS X */
-//#include <termios.h>
+#include <termios.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -562,11 +562,11 @@ int ranking(void)
 			fprintf(ranking,"%f",rank[stage][j]);
 			fprintf(ranking,"\n");
 		}		
-		FILE* name
+		FILE* name;
 		name = fopen("name.txt", "w");
 		for(int i = 0; i <= 9; i++)
 		{
-			fprintf(name, "%c",name[stage][])
+			fprintf(name, "%c",name[stage][i]);
 		}
 }
 
