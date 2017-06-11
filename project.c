@@ -456,15 +456,18 @@ int mapclear(void)
 	}
 }
 
-//jae-hyun
+//Jae-hyun*********************************
 int ranking(void)
 {
-	for (int i = 0;i<=4;i++)
+	char c = 0;
+	FILE* ranking;
+	ranking = fopen("ranking.txt", "r");
+	while (c != EOF)
 	{
-		for (int j = 0;j<4;j++)
-			rank[i][j] = 100000;
+		c = fgetc(ranking);
+		putchar(c);
 	}
-	FILE *ranking;
+
 	if (box == 0)
 	{
 		int rankcount = 5;
@@ -483,16 +486,15 @@ int ranking(void)
 		ranking = fopen("ranking.txt","w");
 		int ranknum = 1;
 		for(int j=0; j<3; j++){
-			fprintf(ranking,"%d. ",ranknum);
-			ranknum++;
-			for(int i=0; i<=9;i++)
-			{
-				fprintf(ranking,"%c",name_r[stage][j][i]);
-			}
-				fprintf(ranking,"%f",rank[stage][j]);
-				fprintf(ranking,"\n");
-		}				
-	}
+			fprintf(ranking,"%f",rank[stage][j]);
+			fprintf(ranking,"\n");
+		}		
+		FILE* name
+		name = fopen("name.txt", "w");
+		for(int i = 0; i <= 9; i++)
+		{
+			fprintf(name, "%c",name[stage][])
+		}
 }
 
 int ctrl_key(char ch)
