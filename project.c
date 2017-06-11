@@ -493,7 +493,8 @@ int ranking(void)
 		name = fopen("name.txt", "w");
 		for(int i = 0; i <= 9; i++)
 		{
-			fprintf(name, "%c",name[stage][])
+			fprintf(name, "%c", name_r[stage][][j]);
+			fprintf(name, "%c", name_r[stage][][j])
 		}
 }
 
