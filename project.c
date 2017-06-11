@@ -537,8 +537,7 @@ int ranking(void)
 	ranking = fopen("ranking.txt", "r");
 	while (c != EOF)
 	{
-		c = fgetc(ranking);
-		putchar(c);
+		
 	}
 
 	if (box == 0)
@@ -564,12 +563,15 @@ int ranking(void)
 		}		
 		FILE* name;
 		name = fopen("name.txt", "w");
-		for(int i = 0; i <= 9; i++)
+		for(int i = 0; i <= 2; i++)
 		{
-			fprintf(name, "%c",name[stage][i]);
+			for (int j = 0; j <= 0; j++) {
+				fprintf(name, "%c", name_r[stage][i][j]);
+				fprintf(name, "\n", name_r[stage][i][j]);
+			}
 		}
+	}
 }
-
 int ctrl_key(char ch)
 {
     int a, b, c, d;
