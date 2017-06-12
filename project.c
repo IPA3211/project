@@ -304,27 +304,53 @@ int re_inputname(void){ // run when the name is entered incorrectly
 int top_output(int a)
 {
 	switch (a)
-	{
-		case 1:
-			printf("stage 1 top\n");
-			for(int i =0; i< 3; i++){
-				printf("#d", i+1,);
-				for(int j = 0; j < 10; j++)
-					printf("%c", name_r[][][])
-			}
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		case 4:
-			break;
-		case 5:
-			break;
+	{	
 		case 127:
-			break;
-
-
+		case 1:
+			printf("\nstage 1 top\n");
+			for(int i =0; i< 3; i++){
+				printf("#%d\t", i+1);
+				for(int j = 0; j < 10; j++){
+					printf("%c", name_r[0][i][j]);
+				}
+				printf("%d.0sec\n", rank[0][i]);
+			}
+		case 2:
+			printf("\nstage 2 top\n");
+			for(int i =0; i< 3; i++){
+				printf("#%d\t", i+1);
+				for(int j = 0; j < 10; j++){
+					printf("%c", name_r[1][i][j]);
+				}
+				printf("%d.0sec\n", rank[1][i]);
+			}
+		case 3:
+			printf("\nstage 3 top\n");
+			for(int i =0; i< 3; i++){
+				printf("#%d\t", i+1);
+				for(int j = 0; j < 10; j++){
+					printf("%c", name_r[2][i][j]);
+				}
+				printf("%d.0sec\n", rank[2][i]);
+			}
+		case 4:
+			printf("\nstage 4 top\n");
+			for(int i =0; i< 3; i++){
+				printf("#%d\t", i+1);
+				for(int j = 0; j < 10; j++){
+					printf("%c", name_r[3][i][j]);
+				}
+				printf("%d.0sec\n", rank[3][i]);
+			}
+		case 5:
+			printf("\nstage 5 top\n");
+			for(int i =0; i< 3; i++){
+				printf("#%d\t", i+1);
+				for(int j = 0; j < 10; j++){
+					printf("%c", name_r[4][i][j]);
+				}
+				printf("%d.0sec\n", rank[4][i]);
+			}
 	}
 }
 
@@ -576,45 +602,9 @@ int mapclear(void)
 	if(box==0)
 	{
 		time(&end);
-		for(int i = 0; i < 20; i++)
-		{
-			for (int j = 0; j < 10; j++) {
-				printf("[%d][%d]%c", i,j,name_r[0][i][j]);
-				if(name_r[0][i][j] == 0)
-					break;
-			}
-			printf("\n");
-		}
 		timeprint();
-		for(int i = 0; i < 20; i++)
-		{
-			for (int j = 0; j < 10; j++) {
-				printf("[%d][%d]%c", i,j,name_r[0][i][j]);
-				if(name_r[0][i][j] == 0)
-					break;
-			}
-			printf("\n");
-		}
 		ranking();
-		for(int i = 0; i < 20; i++)
-		{
-			for (int j = 0; j < 10; j++) {
-				printf("[%d][%d]%c", i,j,name_r[0][i][j]);
-				if(name_r[0][i][j] == 0)
-					break;
-			}
-			printf("\n");
-		}
 		stage++;
-		for(int i = 0; i < 20; i++)
-		{
-			for (int j = 0; j < 10; j++) {
-				printf("[%d][%d]%c", i,j,name_r[0][i][j]);
-				if(name_r[0][i][j] == 0)
-					break;
-			}
-			printf("\n");
-		}
 		time(&start);
 		savetime = 0.0;
 		playmap(stage);
@@ -670,7 +660,7 @@ int ranking(void)
 				}
 			}
 */
-	if (box == 0)
+if (box == 0)
 	{
 		
 		ranking = fopen("ranking.txt","w");
