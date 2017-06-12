@@ -309,49 +309,71 @@ int top_output(int a)
 		case 1:
 			printf("\nstage 1 top\n");
 			for(int i =0; i< 3; i++){
+				if(name_r[0][i][0] == '!')
+					break;
 				printf("#%d\t", i+1);
 				for(int j = 0; j < 10; j++){
 					printf("%c", name_r[0][i][j]);
 				}
 				printf("%d.0sec\n", rank[0][i]);
 			}
+			if(a == 1)
+				break;
 		case 2:
 			printf("\nstage 2 top\n");
 			for(int i =0; i< 3; i++){
+				if(name_r[1][i][0] == '!')
+					break;
 				printf("#%d\t", i+1);
 				for(int j = 0; j < 10; j++){
 					printf("%c", name_r[1][i][j]);
 				}
 				printf("%d.0sec\n", rank[1][i]);
 			}
+			if(a == 2)
+				break;
 		case 3:
 			printf("\nstage 3 top\n");
 			for(int i =0; i< 3; i++){
+				if(name_r[2][i][0] == '!')
+					break;
 				printf("#%d\t", i+1);
 				for(int j = 0; j < 10; j++){
 					printf("%c", name_r[2][i][j]);
 				}
 				printf("%d.0sec\n", rank[2][i]);
 			}
+			if(a == 3)
+				break;
 		case 4:
 			printf("\nstage 4 top\n");
 			for(int i =0; i< 3; i++){
+				if(name_r[3][i][0] == '!')
+					break;
 				printf("#%d\t", i+1);
 				for(int j = 0; j < 10; j++){
 					printf("%c", name_r[3][i][j]);
 				}
 				printf("%d.0sec\n", rank[3][i]);
 			}
+			if(a == 4)
+				break;
 		case 5:
 			printf("\nstage 5 top\n");
 			for(int i =0; i< 3; i++){
+				if(name_r[4][i][0] == '!')
+					break;
 				printf("#%d\t", i+1);
 				for(int j = 0; j < 10; j++){
 					printf("%c", name_r[4][i][j]);
 				}
 				printf("%d.0sec\n", rank[4][i]);
 			}
+			if(a == 5)
+				break;
+		break;
 	}
+	getch();
 }
 
 int read_ranking(void)
@@ -602,8 +624,35 @@ int mapclear(void)
 	if(box==0)
 	{
 		time(&end);
+		for(int i = 0; i < 20; i++)
+		{
+			for (int j = 0; j < 10; j++) {
+				printf("[%d][%d]%c", i,j,name_r[0][i][j]);
+				if(name_r[0][i][j] == 0)
+					break;
+			}
+			printf("\n");
+		}
 		timeprint();
+		for(int i = 0; i < 20; i++)
+		{
+			for (int j = 0; j < 10; j++) {
+				printf("[%d][%d]%c", i,j,name_r[0][i][j]);
+				if(name_r[0][i][j] == 0)
+					break;
+			}
+			printf("\n");
+		}
 		ranking();
+		for(int i = 0; i < 20; i++)
+		{
+			for (int j = 0; j < 10; j++) {
+				printf("[%d][%d]%c", i,j,name_r[0][i][j]);
+				if(name_r[0][i][j] == 0)
+					break;
+			}
+			printf("\n");
+		}
 		stage++;
 		time(&start);
 		savetime = 0.0;
@@ -619,14 +668,15 @@ int mapclear(void)
 int ranking(void)
 {
 	int i, j, tmp, n, tmp_n;
-	for (i = 0; i < 4; i++)//bubble sorting
+	for (i = 0; i < 3; i++)//bubble sorting
 	{
-		for (j = 0; j < 5  - i; j++)
+		for (j = 0; j < 3  - i; j++)
 		{
 			if (rank[stage][j] > rank[stage][j + 1])
 			{
 				tmp = rank[stage][j];
 				rank[stage][j] = rank[stage][j + 1];
+				rank[stage][j+1] = tmp;
 				for (int g = 0; g <= 9; g++)
 				{	
 					tmp_n = name_r[stage][j][g];
@@ -634,7 +684,6 @@ int ranking(void)
 					name_r[stage][j+1][g] = tmp_n;
 				}
 				
-				rank[stage][j+1] = tmp;
 			}
 		}
 	}
