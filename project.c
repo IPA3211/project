@@ -631,7 +631,7 @@ int ranking(void)
 	int i, j, tmp, n, tmp_n;
 	for (i = 0; i < 4; i++)//bubble sorting
 	{
-		for (j = 0; j < 4  - i; j++)
+		for (j = 0; j < 5  - i; j++)
 		{
 			if (rank[stage][j] > rank[stage][j + 1])
 			{
