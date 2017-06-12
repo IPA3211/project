@@ -9,7 +9,7 @@
 /********************
   message or todo
 
-  O + $ = %
+  O + $ = P
   @ + O = *
 
   1. read map: clear(on main)
@@ -50,16 +50,16 @@ char map[5][30][30];
 char p_map[30][30];
 int  mapsize[5];
 int player_x, player_y;//player's x,y
-int rank[5][4];
 
 int num_top[3];
 
 int stage = 0;
 int box = 0;
+int rank[5][4];
 
 char name[10];
 char name_r[5][4][10];
-char undo[2][5] = {0,0,0,0,0,0,0,0,0,0};
+char undo[2][5] = {0,0,0,0,0,0,0,0,0,0};//undo배열 값 초기화.
 time_t start,end;
 int m_time, savetime=0;
 //common func
@@ -152,7 +152,7 @@ int command(char x){
 			displayhelp();
 			break;
 		case 'u':
-			if(undo[0][0] != 0)
+			if(undo[0][0] != 0)//오류 해결.
 	      	undo_key();
 			break;
 		case 'r':
@@ -201,8 +201,8 @@ int get_key(void) //input values
 	static char a, a_sav;;
 	static int pin;
   	int c;
-	if(num_top[0] == 't') //t can get 3 
-	{	
+	if(num_top[0] == 't') //t can get 3
+	{
 		char w;
 		printf("(command) %c%c%c", num_top[0], num_top[1], num_top[2]);//t can get 3 letters
 		w = getch();
@@ -235,25 +235,25 @@ int get_key(void) //input values
 	}
 	if((a == 'h')||(a == 'j')||(a == 'k')||(a == 'l')){ // move key
 		c = ctrl_key(a);
-    	if(c == 1){
+    	if(c == 1){//player만 움직였을 경우
       		for(int i = 0; i <2; i++){
         		for(int j = 3; j>=0; j--){
-          			undo[i][j+1] = undo[i][j];
+          			undo[i][j+1] = undo[i][j];//배열값을 뒤로 밀어준다.
        			 }
 			}
-			undo[0][0] = a;
-	  		undo[1][0] = 0;
+			undo[0][0] = a;//키를 입력받은 값이 저장됨.
+	  	undo[1][0] = 0;//화물이 안움직였을 경우 2번째 행에 값은 0로 저장
 		}
-    	if(c == 2){
+    	if(c == 2){//player와 화물이 움직였을 경우
       		for(int i = 0; i <2; i++){
         		for(int j = 3; j>=0; j--){
-          			undo[i][j+1] = undo[i][j];
+          			undo[i][j+1] = undo[i][j];//배열값을 뒤로 밀어준다.
        			}
 			}
 			undo[0][0] = a;
-			undo[1][0] = 1;
+			undo[1][0] = 1;//화물이 움직이면 2번째 행의 값은 1로 저장
     	}
-    	a = 0;
+    	a = 0;//키입력마다 a값 초기화
 	}
 	else if(a == '\n')
 		command(a_sav);
@@ -275,7 +275,7 @@ int printname(void){ // print name
 int re_inputname(void){ // run when the name is entered incorrectly
 
 	int nm=0;
-	
+
 	for (int j = 0; j <10; j++)
 	{
 		name[j] = 0;
@@ -301,8 +301,9 @@ int re_inputname(void){ // run when the name is entered incorrectly
 	return 0;
 }
 
-int top_output(int a)
+int top_output(int a) //top output
 {
+	system("clear");
 	switch (a)
 	{	
 		case 127:
@@ -376,7 +377,7 @@ int top_output(int a)
 	getch();
 }
 
-int read_ranking(void)
+int read_ranking(void) //read ranking data from ranking.txt
 {
 	char c = 0;
 	FILE* ranking;
@@ -384,10 +385,10 @@ int read_ranking(void)
 
 	for(int j=0; j<20; j++){
 		fscanf(ranking,"%d", &rank[0][j]);
-	}		
+	}
 	fgetc(ranking);
 	for(int i = 0; i < 5; i++)
-		for(int j = 0; j < 4; j++)	
+		for(int j = 0; j < 4; j++)
 			for(int nm =0; nm<10; nm++){
 				name_r[i][j][nm] = fgetc(ranking); //입력받은 값을 name배열값에 지정.
 				if(name_r[i][j][nm] == '\n')
@@ -396,16 +397,7 @@ int read_ranking(void)
 					break;
 				}
 			}
-		printf("asdasd");
-		for(int i = 0; i < 20; i++)
-		{
-			for (int j = 0; j < 10; j++) {
-				printf("[%d][%d]%c", i,j,name_r[0][i][j]);
-				if(name_r[0][i][j] == 0)
-					break;
-			}
-			printf("\n");
-		}
+
 	fclose(ranking);
 }
 
@@ -430,10 +422,7 @@ int inputname(void)
 			break;
 		}
 	}
-//	for(int i=0; i<=10;i++)
-//	name_r[stage][3][i] = name[i];
-
-	return 0;
+		return 0;
 }
 
 /* display help(d) */
@@ -449,14 +438,14 @@ int displayhelp(void){
 	printf("-d(display help) : 명령어 보여줌.\n");
 	printf("-t(top) : 게임 순위 보기.(t만 입력하면 전체 순위, t다음 숫자가 오면 해당 맵의 순위)\n");
 	printf("----------------나가기 'q'-----------------\n");
-	if(getch() == 'q');
+	if(getch() == 'q');//	'q' = return to map
 	else
 		displayhelp();
 }
 
-int player_xy(void)
+int player_xy(void)//find a player's x, y
 {
-	for(int i=0;i<30;i++)
+	for(int i=0;i<30;i++)//find '@', 'P'
 	{
 		for(int j=0;j<30;j++)
 		{
@@ -475,7 +464,7 @@ int undo_key(void)
 	player_xy();
 	int box_x, box_y;
   char reverse;
-
+//Divide the number of cases according to the number of keys pressed.
 	switch (undo[0][0]) {
 		case 'l':
 			box_x = 1;
@@ -501,12 +490,12 @@ int undo_key(void)
 			break;
 	}
 
-    if(undo[1][0] == 1)
+    if(undo[1][0] == 1)//화물이 같이 움직였을 경우
     {
-      ctrl_key(reverse);
+      ctrl_key(reverse);//player의 위치를 먼저 원래의 위치로.
 			if((p_map[player_y+box_y][player_x+box_x] == '*')&&(p_map[player_y][player_x] == ' ')){
 				p_map[player_y+box_y][player_x+box_x] = 'O';
-				p_map[player_y][player_x] = '$';
+				p_map[player_y][player_x] = '$';//
 			}
 			else if((p_map[player_y+box_y][player_x+box_x] == '*')&&(p_map[player_y][player_x] == 'O')) {
       	p_map[player_y+box_y][player_x+box_x] = 'O';
@@ -521,27 +510,27 @@ int undo_key(void)
       	p_map[player_y][player_x] = ' ';
 			}
     }
-    else if (undo[1][0] == 0)
+    else if (undo[1][0] == 0)//player만 움직였을 경우 반대의 키를 입력한다.
       ctrl_key(reverse);
 		else
 		{}
-  for(int i = 1; i >=0; i--){
+  for(int i = 1; i >=0; i--){//undo기능을 사용시 앞으로 배열값을 당겨온다.
 		if(i == 0){
 			for(int j = 0; j <5; j++){
 			undo[i][j] = undo[i][j+1];
 			}
-			undo[0][4] = 0;
+			undo[0][4] = 0;//마지막 배열값은 다시 0으로 초기화
 		}
 		else{
       for(int j = 0; j < 5; j++){
         undo[i][j] = undo[i][j+1];
 			}
-			undo[1][4] = 0;
+			undo[1][4] = 0;//마지막 배열값은 다시 0으로 초기화
 		}
 	}
 }
 //Jae-woo
-int error(void){
+int error(void){ //맵의 오류를 확인하는 함수
 	int box=0, place=0;
 	for(int b=0; b<5; b++){
 		for(int i=0; i<30; i++)
@@ -552,41 +541,41 @@ int error(void){
 				else if(map[b][i][j]=='O')
 					place++;
 				else{}
-			}
+			} //맵 전부를 확인해서 $가 있으면 box변수 증가, O가 있으면 place변수 증가
 		if(box!=place){
 			printf("%d맵에 오류가 있습니다.\n", b);
 			exit(1);
-		}
+		}//box와 place가 같지 않으면 오류메시지를 출력하고 게임을 종료
 	}
 }
 int gameclear(void)
-	//game클리어 했을 때
+	//game을 클리어 했을 때
 {
 	if(stage> 4){
 	system("clear");
 	printf("축하합니다. 모든 게임을 완료했습니다.\n");
 	exit(1);
-	}
+	}//stage가 4보다 크면 모든 맵을 완료했다는 뜻이므로 축하메시지를 출력하고 게임을 종료
 }
 int fileload(void)
-{ //f키를 눌렀을 때
+{ //f키를 눌렀을 때, fileload기능
 	FILE *sokoban;
 	sokoban=fopen("sokoban.txt","r");
 	for(int i=0;i<30;i++)
 		for(int j=0;j<30;j++)
-			fscanf(sokoban,"%c",&p_map[i][j]);	
+			fscanf(sokoban,"%c",&p_map[i][j]);	//저장된 맵을 로드
 	for(int k = 0; k <10; k++)
-		fscanf(sokoban,"%c", &name[k]);
+		fscanf(sokoban,"%c", &name[k]); //유저 네임을 로드
 	for(int h = 0; h < 10; h++)
-		fscanf(sokoban,"%d", &undo[0][h]);
-	fscanf(sokoban,"%f",&savetime);
-	fscanf(sokoban,"%d",&stage);
+		fscanf(sokoban,"%d", &undo[0][h]); //저장된 undo 로드
+	fscanf(sokoban,"%f",&savetime); //시간 로드
+	fscanf(sokoban,"%d",&stage);//stage 로드
 	fclose(sokoban);
-	time(&start);
+	time(&start); //시간 측정 다시 시작
 }
 int save(void)
-{ //s키
-	time(&end);
+{ //s키를 눌렀을 때 save기능
+	time(&end); //시간 측정 종료
 	savetime+=end-start;
 	FILE *sokoban;
 	sokoban=fopen("sokoban.txt","w");
@@ -594,73 +583,45 @@ int save(void)
 		for(int j=0; j<30; j++)
 		{
 			fprintf(sokoban,"%c",p_map[i][j]);
-		}
+		} //현재 맵 저장
 	for(int k = 0; k <10; k++)
-		fprintf(sokoban,"%c", name[k]);
+		fprintf(sokoban,"%c", name[k]); //유저 네임 저장
 	fprintf(sokoban,"\n");
 	for(int h = 0; h < 10; h++)
-		fprintf(sokoban,"%d\n", undo[0][h]);
-	fprintf(sokoban,"%f\n",savetime);
-	fprintf(sokoban,"%d\n",stage);
+		fprintf(sokoban,"%d\n", undo[0][h]); //현재 undo저장
+	fprintf(sokoban,"%f\n",savetime); //지나간 시간 저장
+	fprintf(sokoban,"%d\n",stage); //현재 단계 저장
 	fclose(sokoban);
-	time(&start);
+	time(&start);//시간 측정 다시 시작
 }
 
 int timeprint(void){
   m_time=savetime+(end-start);
   rank[stage][3] = m_time;
-  printf("%d", rank[stage][3]);
   for (int i = 0; i <10; i++)
   {
 	if(name[i] == 0 ||name[i] == '\n')
-		break;
+		break; //map을 클리어 한 유저의 이름 전달
   	name_r[stage][3][i] = name[i];
 	printf("%c",name_r[stage][3][i]);
   }
 }
 
 int mapclear(void)
-{
-	if(box==0)
+{ //map을 클리어 했을 때
+	if(box==0) //box가 0이라는 뜻은 맵이 클리어 되었다는 것이다
 	{
-		time(&end);
-		for(int i = 0; i < 20; i++)
-		{
-			for (int j = 0; j < 10; j++) {
-				printf("[%d][%d]%c", i,j,name_r[0][i][j]);
-				if(name_r[0][i][j] == 0)
-					break;
-			}
-			printf("\n");
-		}
+		time(&end); //시간 측정을 멈춘다
 		timeprint();
-		for(int i = 0; i < 20; i++)
-		{
-			for (int j = 0; j < 10; j++) {
-				printf("[%d][%d]%c", i,j,name_r[0][i][j]);
-				if(name_r[0][i][j] == 0)
-					break;
-			}
-			printf("\n");
-		}
 		ranking();
-		for(int i = 0; i < 20; i++)
-		{
-			for (int j = 0; j < 10; j++) {
-				printf("[%d][%d]%c", i,j,name_r[0][i][j]);
-				if(name_r[0][i][j] == 0)
-					break;
-			}
-			printf("\n");
-		}
-		stage++;
-		time(&start);
+		stage++; //stage증가
+		time(&start); //시간 측정 다시 시작
 		savetime = 0.0;
-		playmap(stage);
+		playmap(stage); // 다음 단계 시작
 		for (int i =0 ; i < 10; i++)
 		{
 			undo[0][i] = 0;
-		}
+		} //undo 초기화
 	}
 }
 
@@ -678,40 +639,21 @@ int ranking(void)
 				rank[stage][j] = rank[stage][j + 1];
 				rank[stage][j+1] = tmp;
 				for (int g = 0; g <= 9; g++)
-				{	
+				{
 					tmp_n = name_r[stage][j][g];
 					name_r[stage][j][g] = name_r[stage][j+1][g];
 					name_r[stage][j+1][g] = tmp_n;
 				}
-				
 			}
 		}
 	}
 
 	char c = 0;
 	FILE* ranking;
-//	ranking = fopen("ranking.txt", "w");
-
-/*	
-		
-	for(int j=0; j<20; j++){
-		fscanf(ranking,"%d", &rank[0][j]);
-		printf("\n%d", rank[0][j]);
-	}		
-	for(int i = 0; i < 5; i++)
-		for(int j = 0; j < 4; j++)	
-			for(int nm =0; nm<10; nm++){
-				name_r[i][j][nm] = fgetc(ranking); //입력받은 값을 name배열값에 지정.
-				printf("\n%d", name_r[i][j][nm]);
-				if(name_r[i][j][nm] == '\n')
-				{
-					break;
-				}
-			}
-*/
+	
 if (box == 0)
+
 	{
-		
 		ranking = fopen("ranking.txt","w");//ranking file writing
 		int ranknum = 1;
 		for(int j=0; j<20; j++){
