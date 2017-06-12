@@ -303,7 +303,29 @@ int re_inputname(void){ // run when the name is entered incorrectly
 
 int top_output(int a)
 {
-	printf("%d", a);
+	switch (a)
+	{
+		case 1:
+			printf("stage 1 top\n");
+			for(int i =0; i< 3; i++){
+				printf("#d", i+1,);
+				for(int j = 0; j < 10; j++)
+					printf("%c", name_r[][][])
+			}
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		case 5:
+			break;
+		case 127:
+			break;
+
+
+	}
 }
 
 int read_ranking(void)
@@ -314,19 +336,29 @@ int read_ranking(void)
 
 	for(int j=0; j<20; j++){
 		fscanf(ranking,"%d", &rank[0][j]);
-		printf("\n%d", rank[0][j]);
 	}		
+	fgetc(ranking);
 	for(int i = 0; i < 5; i++)
 		for(int j = 0; j < 4; j++)	
 			for(int nm =0; nm<10; nm++){
 				name_r[i][j][nm] = fgetc(ranking); //입력받은 값을 name배열값에 지정.
-				printf("\n%d", name_r[i][j][nm]);
 				if(name_r[i][j][nm] == '\n')
 				{
 					name_r[i][j][nm] = 0;
 					break;
 				}
 			}
+		printf("asdasd");
+		for(int i = 0; i < 20; i++)
+		{
+			for (int j = 0; j < 10; j++) {
+				printf("[%d][%d]%c", i,j,name_r[0][i][j]);
+				if(name_r[0][i][j] == 0)
+					break;
+			}
+			printf("\n");
+		}
+	fclose(ranking);
 }
 
 //Cheol-soon
@@ -350,8 +382,8 @@ int inputname(void)
 			break;
 		}
 	}
-	for(int i=0; i<=10;i++)
-	name_r[stage][3][i] = name[i];
+//	for(int i=0; i<=10;i++)
+//	name_r[stage][3][i] = name[i];
 
 	return 0;
 }
@@ -532,6 +564,8 @@ int timeprint(void){
   printf("%d", rank[stage][3]);
   for (int i = 0; i <10; i++)
   {
+	if(name[i] == 0 ||name[i] == '\n')
+		break;
   	name_r[stage][3][i] = name[i];
 	printf("%c",name_r[stage][3][i]);
   }
@@ -542,9 +576,45 @@ int mapclear(void)
 	if(box==0)
 	{
 		time(&end);
+		for(int i = 0; i < 20; i++)
+		{
+			for (int j = 0; j < 10; j++) {
+				printf("[%d][%d]%c", i,j,name_r[0][i][j]);
+				if(name_r[0][i][j] == 0)
+					break;
+			}
+			printf("\n");
+		}
 		timeprint();
+		for(int i = 0; i < 20; i++)
+		{
+			for (int j = 0; j < 10; j++) {
+				printf("[%d][%d]%c", i,j,name_r[0][i][j]);
+				if(name_r[0][i][j] == 0)
+					break;
+			}
+			printf("\n");
+		}
 		ranking();
+		for(int i = 0; i < 20; i++)
+		{
+			for (int j = 0; j < 10; j++) {
+				printf("[%d][%d]%c", i,j,name_r[0][i][j]);
+				if(name_r[0][i][j] == 0)
+					break;
+			}
+			printf("\n");
+		}
 		stage++;
+		for(int i = 0; i < 20; i++)
+		{
+			for (int j = 0; j < 10; j++) {
+				printf("[%d][%d]%c", i,j,name_r[0][i][j]);
+				if(name_r[0][i][j] == 0)
+					break;
+			}
+			printf("\n");
+		}
 		time(&start);
 		savetime = 0.0;
 		playmap(stage);
@@ -568,7 +638,7 @@ int ranking(void)
 				tmp = rank[stage][j];
 				rank[stage][j] = rank[stage][j + 1];
 				for (int g = 0; g <= 9; g++)
-				{
+				{	
 					tmp_n = name_r[stage][j][g];
 					name_r[stage][j][g] = name_r[stage][j+1][g];
 					name_r[stage][j+1][g] = tmp_n;
@@ -581,7 +651,8 @@ int ranking(void)
 
 	char c = 0;
 	FILE* ranking;
-	ranking = fopen("ranking.txt", "r");
+//	ranking = fopen("ranking.txt", "w");
+
 /*	
 		
 	for(int j=0; j<20; j++){
@@ -606,16 +677,18 @@ int ranking(void)
 		int ranknum = 1;
 		for(int j=0; j<20; j++){
 			fprintf(ranking,"%d",rank[0][j]);
-			if(j< 19)
-				fprintf(ranking,"\n");
+			fprintf(ranking,"\n");
 		}
 		for(int i = 0; i < 20; i++)
 		{
 			for (int j = 0; j < 10; j++) {
 				fprintf(ranking, "%c", name_r[0][i][j]);
+				if(name_r[0][i][j] == 0)
+					break;
 			}
 			fprintf(ranking,"\n");
 		}
+		fclose(ranking);
 	}
 }
 int ctrl_key(char ch)
