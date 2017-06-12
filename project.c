@@ -489,7 +489,7 @@ int undo_key(void)
 	}
 }
 //Jae-woo
-int error(void){
+int error(void){ //맵의 오류를 확인하는 함수
 	int box=0, place=0;
 	for(int b=0; b<5; b++){
 		for(int i=0; i<30; i++)
@@ -500,41 +500,45 @@ int error(void){
 				else if(map[b][i][j]=='O')
 					place++;
 				else{}
-			}
+			} //맵 전부를 확인해서 $가 있으면 box변수 증가, O가 있으면 place변수 증가
 		if(box!=place){
 			printf("%d맵에 오류가 있습니다.\n", b);
 			exit(1);
-		}
+		}//box와 place가 같지 않으면 오류메시지를 출력하고 게임을 종료
 	}
 }
 int gameclear(void)
-	//game클리어 했을 때
+	//game을 클리어 했을 때
 {
 	if(stage> 4){
 	system("clear");
 	printf("축하합니다. 모든 게임을 완료했습니다.\n");
 	exit(1);
-	}
+	}//stage가 4보다 크면 모든 맵을 완료했다는 뜻이므로 축하메시지를 출력하고 게임을 종료
 }
 int fileload(void)
-{ //f키를 눌렀을 때
+{ //f키를 눌렀을 때, fileload기능
 	FILE *sokoban;
 	sokoban=fopen("sokoban.txt","r");
 	for(int i=0;i<30;i++)
 		for(int j=0;j<30;j++)
+<<<<<<< HEAD
 			fscanf(sokoban,"%c",&p_map[i][j]);
+=======
+			fscanf(sokoban,"%c",&p_map[i][j]);	//저장된 맵을 로드
+>>>>>>> 49f52f189081e2357b7a6da4e91aeba3304135b9
 	for(int k = 0; k <10; k++)
-		fscanf(sokoban,"%c", &name[k]);
+		fscanf(sokoban,"%c", &name[k]); //유저 네임을 로드
 	for(int h = 0; h < 10; h++)
-		fscanf(sokoban,"%d", &undo[0][h]);
-	fscanf(sokoban,"%f",&savetime);
-	fscanf(sokoban,"%d",&stage);
+		fscanf(sokoban,"%d", &undo[0][h]); //저장된 undo 로드
+	fscanf(sokoban,"%f",&savetime); //시간 로드
+	fscanf(sokoban,"%d",&stage);//stage 로드
 	fclose(sokoban);
-	time(&start);
+	time(&start); //시간 측정 다시 시작
 }
 int save(void)
-{ //s키
-	time(&end);
+{ //s키를 눌렀을 때 save기능
+	time(&end); //시간 측정 종료
 	savetime+=end-start;
 	FILE *sokoban;
 	sokoban=fopen("sokoban.txt","w");
@@ -542,16 +546,16 @@ int save(void)
 		for(int j=0; j<30; j++)
 		{
 			fprintf(sokoban,"%c",p_map[i][j]);
-		}
+		} //현재 맵 저장
 	for(int k = 0; k <10; k++)
-		fprintf(sokoban,"%c", name[k]);
+		fprintf(sokoban,"%c", name[k]); //유저 네임 저장
 	fprintf(sokoban,"\n");
 	for(int h = 0; h < 10; h++)
-		fprintf(sokoban,"%d\n", undo[0][h]);
-	fprintf(sokoban,"%f\n",savetime);
-	fprintf(sokoban,"%d\n",stage);
+		fprintf(sokoban,"%d\n", undo[0][h]); //현재 undo저장
+	fprintf(sokoban,"%f\n",savetime); //지나간 시간 저장
+	fprintf(sokoban,"%d\n",stage); //현재 단계 저장
 	fclose(sokoban);
-	time(&start);
+	time(&start);//시간 측정 다시 시작
 }
 
 int timeprint(void){
@@ -569,7 +573,7 @@ int timeprint(void){
   for (int i = 0; i <10; i++)
   {
 	if(name[i] == 0 ||name[i] == '\n')
-		break;
+		break; //map을 클리어 한 유저의 이름 전달
   	name_r[stage][3][i] = name[i];
 	printf("%c",name_r[stage][3][i]);
 >>>>>>> c6336f96f30e0fcf2693c66304f740417dabe7fc
@@ -577,10 +581,10 @@ int timeprint(void){
 }
 
 int mapclear(void)
-{
-	if(box==0)
+{ //map을 클리어 했을 때
+	if(box==0) //box가 0이라는 뜻은 맵이 클리어 되었다는 것이다
 	{
-		time(&end);
+		time(&end); //시간 측정을 멈춘다
 		for(int i = 0; i < 20; i++)
 		{
 			for (int j = 0; j < 10; j++) {
@@ -610,7 +614,7 @@ int mapclear(void)
 			}
 			printf("\n");
 		}
-		stage++;
+		stage++; //stage증가
 		for(int i = 0; i < 20; i++)
 		{
 			for (int j = 0; j < 10; j++) {
@@ -620,13 +624,13 @@ int mapclear(void)
 			}
 			printf("\n");
 		}
-		time(&start);
+		time(&start); //시간 측정 다시 시작
 		savetime = 0.0;
-		playmap(stage);
+		playmap(stage); // 다음 단계 시작
 		for (int i =0 ; i < 10; i++)
 		{
 			undo[0][i] = 0;
-		}
+		} //undo 초기화
 	}
 }
 
@@ -634,9 +638,9 @@ int mapclear(void)
 int ranking(void)
 {
 	int i, j, tmp, n, tmp_n;
-	for (i = 0; i < 4; i++)
+	for (i = 0; i < 4; i++)//bubble sorting
 	{
-		for (j = 0; j < 4  - i; j++)
+		for (j = 0; j < 5  - i; j++)
 		{
 			if (rank[stage][j] > rank[stage][j + 1])
 			{
@@ -676,14 +680,13 @@ int ranking(void)
 */
 	if (box == 0)
 	{
-
-		ranking = fopen("ranking.txt","w");
+		ranking = fopen("ranking.txt","w");//ranking file writing
 		int ranknum = 1;
 		for(int j=0; j<20; j++){
 			fprintf(ranking,"%d",rank[0][j]);
 			fprintf(ranking,"\n");
 		}
-		for(int i = 0; i < 20; i++)
+		for(int i = 0; i < 20; i++)//name file writing
 		{
 			for (int j = 0; j < 10; j++) {
 				fprintf(ranking, "%c", name_r[0][i][j]);
@@ -695,7 +698,7 @@ int ranking(void)
 		fclose(ranking);
 	}
 }
-int ctrl_key(char ch)
+int ctrl_key(char ch)//control part
 {
     int a, b, c, d;
     for(int i=0;i<30;i++)
@@ -709,7 +712,7 @@ int ctrl_key(char ch)
     }
 
 
-      switch (ch) {
+      switch (ch) {//key accepting
         case 'l':
           c = 1;
           d = 0;
@@ -887,13 +890,13 @@ int ctrl_key(char ch)
           return 1;
         }
       }
-      else if((p_map[b][a] != '@')||(p_map[b][a] != 'P'))
+      else if((p_map[b][a] != '@')||(p_map[b][a] != 'P'))//error checking
       printf("move error");
       else
       printf("error");
 }
 
-int box_check(void)
+int box_check(void)//counting boxes and moves to mext stage
 {
 	box = 0;
     for(int i=0;i<30;i++)
