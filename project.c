@@ -1,6 +1,6 @@
 /*********************
- * date:
- * group: handsome
+ * date: 2017/06/12
+ * group: wrd
  * student ID: 20170259,20170319,20170293,20170289
  *
  *
@@ -16,18 +16,18 @@
   2. error: clear(on main)
   3. input name: clear(on main)
   4. game clear: clear(on main)
-  5. ranking: jae-hyun
-  6. save ranking: jae-woo
+  5. ranking: clear(on main)
+  6. save ranking: clear(on main)
   7. h,j,k,l move: clear(on main)
-  8. undo: cheol-soon
+  8. undo: clear(on main)
   9. new: clear(on main)
   10. exit: clear(on main)
   11. replay: clear(on main)
   12. file load: clear(on main)
   13. save: clear(on main)
   14. help: clear(on main)
-  15. top: cheol-soon
-  16. each map top: cheol-soon
+  15. top: clear(on main)
+  16. each map top: clear(on main)
   17. time: clear(on main)
  *********************/
 
@@ -544,7 +544,7 @@ int error(void){ //맵의 오류를 확인하는 함수
 				else{}
 			} //맵 전부를 확인해서 $가 있으면 box변수 증가, O가 있으면 place변수 증가
 		if(box!=place){
-			printf("%d맵에 오류가 있습니다.\n", b);
+			printf("%d맵에 오류가 있습니다.\n", b+1);
 			exit(1);
 		}//box와 place가 같지 않으면 오류메시지를 출력하고 게임을 종료
 	}
