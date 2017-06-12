@@ -305,12 +305,12 @@ int top_output(int a) //top output
 {
 	system("clear");
 	switch (a)
-	{	
+	{
 		case 127:
 		case 1:
 			printf("\nstage 1 top\n");
 			for(int i =0; i< 3; i++){
-				if(name_r[0][i][0] == '!')
+				if(name_r[0][i][0] == '!'||name_r[0][i][0] == 0)
 					break;
 				printf("#%d\t", i+1);
 				for(int j = 0; j < 10; j++){
@@ -323,7 +323,7 @@ int top_output(int a) //top output
 		case 2:
 			printf("\nstage 2 top\n");
 			for(int i =0; i< 3; i++){
-				if(name_r[1][i][0] == '!')
+				if((name_r[1][i][0] == '!')||(name_r[1][i][0] == 0))
 					break;
 				printf("#%d\t", i+1);
 				for(int j = 0; j < 10; j++){
@@ -336,7 +336,7 @@ int top_output(int a) //top output
 		case 3:
 			printf("\nstage 3 top\n");
 			for(int i =0; i< 3; i++){
-				if(name_r[2][i][0] == '!')
+				if((name_r[2][i][0] == '!')||(name_r[2][i][0] == 0))
 					break;
 				printf("#%d\t", i+1);
 				for(int j = 0; j < 10; j++){
@@ -349,7 +349,7 @@ int top_output(int a) //top output
 		case 4:
 			printf("\nstage 4 top\n");
 			for(int i =0; i< 3; i++){
-				if(name_r[3][i][0] == '!')
+				if((name_r[3][i][0] == '!')||(name_r[3][i][0] == 0))
 					break;
 				printf("#%d\t", i+1);
 				for(int j = 0; j < 10; j++){
@@ -362,7 +362,7 @@ int top_output(int a) //top output
 		case 5:
 			printf("\nstage 5 top\n");
 			for(int i =0; i< 3; i++){
-				if(name_r[4][i][0] == '!')
+				if((name_r[4][i][0] == '!')||(name_r[4][i][0] == 0))
 					break;
 				printf("#%d\t", i+1);
 				for(int j = 0; j < 10; j++){
@@ -387,6 +387,7 @@ int read_ranking(void) //read ranking data from ranking.txt
 		fscanf(ranking,"%d", &rank[0][j]);
 	}
 	fgetc(ranking);
+//	fgetc(ranking);
 	for(int i = 0; i < 5; i++)
 		for(int j = 0; j < 4; j++)
 			for(int nm =0; nm<10; nm++){
@@ -603,7 +604,6 @@ int timeprint(void){
 	if(name[i] == 0 ||name[i] == '\n')
 		break; //map을 클리어 한 유저의 이름 전달
   	name_r[stage][3][i] = name[i];
-	printf("%c",name_r[stage][3][i]);
   }
 }
 
@@ -650,7 +650,7 @@ int ranking(void)
 
 	char c = 0;
 	FILE* ranking;
-	
+
 if (box == 0)
 
 	{
