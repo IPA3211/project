@@ -629,7 +629,7 @@ int mapclear(void)
 int ranking(void)
 {
 	int i, j, tmp, n, tmp_n;
-	for (i = 0; i < 4; i++)
+	for (i = 0; i < 4; i++)//bubble sorting
 	{
 		for (j = 0; j < 4  - i; j++)
 		{
@@ -673,13 +673,13 @@ int ranking(void)
 	if (box == 0)
 	{
 		
-		ranking = fopen("ranking.txt","w");
+		ranking = fopen("ranking.txt","w");//ranking file writing
 		int ranknum = 1;
 		for(int j=0; j<20; j++){
 			fprintf(ranking,"%d",rank[0][j]);
 			fprintf(ranking,"\n");
 		}
-		for(int i = 0; i < 20; i++)
+		for(int i = 0; i < 20; i++)//name file writing
 		{
 			for (int j = 0; j < 10; j++) {
 				fprintf(ranking, "%c", name_r[0][i][j]);
@@ -691,7 +691,7 @@ int ranking(void)
 		fclose(ranking);
 	}
 }
-int ctrl_key(char ch)
+int ctrl_key(char ch)//control part
 {
     int a, b, c, d;
     for(int i=0;i<30;i++)
@@ -705,7 +705,7 @@ int ctrl_key(char ch)
     }
 
 
-      switch (ch) {
+      switch (ch) {//key accepting
         case 'l':
           c = 1;
           d = 0;
@@ -883,13 +883,13 @@ int ctrl_key(char ch)
           return 1;
         }
       }
-      else if((p_map[b][a] != '@')||(p_map[b][a] != 'P'))
+      else if((p_map[b][a] != '@')||(p_map[b][a] != 'P'))//error checking
       printf("move error");
       else
       printf("error");
 }
 
-int box_check(void)
+int box_check(void)//counting boxes and moves to mext stage
 {
 	box = 0;
     for(int i=0;i<30;i++)
